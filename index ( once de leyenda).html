@@ -1,0 +1,3638 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ONCE DE LEYENDA — Draft Histórico</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+  :root{
+    --cesped: #0f2818;
+    --cesped-claro: #1a3a26;
+    --tiza: #f3efe2;
+    --tiza-op: rgba(243,239,226,0.55);
+    --dorado: #c9a043;
+    --dorado-claro: #e3c87a;
+    --rojo: #b8362c;
+    --azul-noche: #0a1612;
+    --linea: rgba(243,239,226,0.18);
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  html,body{
+    background: var(--azul-noche);
+    color: var(--tiza);
+    font-family: 'Oswald', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body{
+    background-image:
+      radial-gradient(ellipse at top, rgba(201,160,67,0.07), transparent 60%),
+      repeating-linear-gradient(0deg, var(--cesped) 0px, var(--cesped) 40px, var(--cesped-claro) 40px, var(--cesped-claro) 80px);
+    background-attachment: fixed;
+  }
+
+  .stadium-overlay{
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(10,22,18,0.75) 0%, rgba(10,22,18,0.4) 20%, rgba(10,22,18,0.55) 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap{
+    position: relative;
+    z-index: 1;
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 28px 18px 80px;
+  }
+
+  header{
+    text-align: center;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--linea);
+  }
+
+  .eyebrow{
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--dorado-claro);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  h1{
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(38px, 7vw, 64px);
+    letter-spacing: 2px;
+    line-height: 0.95;
+    color: var(--tiza);
+    text-shadow: 0 4px 0 rgba(0,0,0,0.3);
+  }
+  h1 span{ color: var(--dorado); }
+
+  .subtitle{
+    font-size: 14px;
+    color: var(--tiza-op);
+    margin-top: 8px;
+    letter-spacing: 0.5px;
+  }
+
+  .scoreboard{
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin: 22px 0 8px;
+    flex-wrap: wrap;
+  }
+  .slot-chip{
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    padding: 6px 10px;
+    border: 1px solid var(--linea);
+    border-radius: 3px;
+    background: rgba(0,0,0,0.25);
+    color: var(--tiza-op);
+    min-width: 38px;
+    text-align:center;
+  }
+  .slot-chip.filled{
+    background: var(--dorado);
+    color: var(--azul-noche);
+    border-color: var(--dorado);
+    font-weight: 700;
+  }
+  .slot-chip.current{
+    border-color: var(--dorado-claro);
+    color: var(--dorado-claro);
+    box-shadow: 0 0 0 2px rgba(201,160,67,0.25);
+  }
+
+  .panel{
+    background: linear-gradient(180deg, rgba(15,40,24,0.9), rgba(10,22,18,0.92));
+    border: 1px solid var(--linea);
+    border-radius: 6px;
+    padding: 26px;
+    margin-bottom: 22px;
+  }
+
+  .panel h2{
+    font-family: 'Anton', sans-serif;
+    font-size: 22px;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+    color: var(--dorado-claro);
+  }
+
+  .option-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .opt-btn{
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    padding: 14px 10px;
+    background: rgba(243,239,226,0.04);
+    border: 1px solid var(--linea);
+    color: var(--tiza);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-align: center;
+  }
+  .opt-btn:hover{ background: rgba(201,160,67,0.12); border-color: var(--dorado); }
+  .opt-btn.selected{
+    background: var(--dorado);
+    color: var(--azul-noche);
+    border-color: var(--dorado);
+  }
+
+  .formation-field{
+    position: relative;
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto 18px;
+    aspect-ratio: 0.72;
+    border: 2px solid rgba(243,239,226,0.3);
+    border-radius: 4px;
+    background: rgba(0,0,0,0.15);
+  }
+  .formation-field::before{
+    content:'';
+    position:absolute; top:50%; left:0; right:0;
+    height:1px; background: rgba(243,239,226,0.3);
+  }
+  .formation-field::after{
+    content:'';
+    position:absolute; top:50%; left:50%;
+    width:50px; height:50px;
+    border:1px solid rgba(243,239,226,0.3);
+    border-radius:50%;
+    transform: translate(-50%,-50%);
+  }
+  .fdot{
+    position:absolute;
+    width:10px; height:10px;
+    background: var(--dorado);
+    border-radius: 50%;
+    transform: translate(-50%,-50%);
+    box-shadow: 0 0 6px rgba(201,160,67,0.6);
+  }
+
+  .cta-row{
+    display:flex;
+    justify-content:center;
+    margin-top: 20px;
+  }
+
+  .btn-main{
+    font-family: 'Anton', sans-serif;
+    font-size: 18px;
+    letter-spacing: 1.5px;
+    padding: 16px 42px;
+    background: var(--dorado);
+    color: var(--azul-noche);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+    box-shadow: 0 4px 0 #8a7430;
+  }
+  .btn-main:hover{ transform: translateY(-2px); box-shadow: 0 6px 0 #8a7430; }
+  .btn-main:active{ transform: translateY(2px); box-shadow: 0 2px 0 #8a7430; }
+  .btn-main:disabled{ opacity:0.4; cursor:not-allowed; transform:none; box-shadow:0 4px 0 #8a7430;}
+
+  .btn-ghost{
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 1px;
+    padding: 10px 20px;
+    background: transparent;
+    color: var(--tiza-op);
+    border: 1px solid var(--linea);
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .btn-ghost:hover{ color: var(--tiza); border-color: var(--tiza-op); }
+
+  .draft-stage{ display:none; }
+  .draft-stage.active{ display:block; }
+
+  .tournament-stage{ display:none; }
+  .tournament-stage.active{ display:block; }
+
+  .tournament-info{
+    text-align:center;
+    font-family:'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--tiza-op);
+    margin-bottom: 18px;
+    min-height: 16px;
+  }
+
+  .rating-vis-info{
+    font-size: 12.5px;
+    color: var(--tiza-op);
+    margin-bottom: 18px;
+    line-height: 1.4;
+  }
+
+  /* ---- Player card: rating oculto ---- */
+  .player-card.rating-hidden .prating{ display:none; }
+  .player-card .porigin{
+    font-size: 10px;
+    color: var(--tiza-op);
+    margin-top: 3px;
+  }
+
+  /* ---- Fase de grupos ---- */
+  .group-block{ margin-bottom: 26px; }
+  .group-block h3{
+    font-family:'Anton', sans-serif;
+    font-size: 16px;
+    letter-spacing: 1px;
+    color: var(--dorado-claro);
+    margin-bottom: 10px;
+  }
+  table.group-table{
+    width: 100%;
+    border-collapse: collapse;
+    font-family:'Space Mono', monospace;
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+  table.group-table th, table.group-table td{
+    padding: 7px 6px;
+    text-align: center;
+    border-bottom: 1px solid var(--linea);
+  }
+  table.group-table th{
+    color: var(--tiza-op);
+    font-size: 10.5px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  table.group-table td.team-name{
+    text-align:left;
+    font-family:'Oswald',sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  table.group-table tr.me td{ color: var(--dorado-claro); }
+  table.group-table tr.qualified td.team-name{ color: var(--dorado); }
+  table.group-table tr.qualified{ background: rgba(201,160,67,0.06); }
+
+  .fixture-list{ margin-top: 6px; margin-bottom: 4px;}
+  .fixture-row{
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+    font-family:'Space Mono', monospace;
+    font-size: 12px;
+    padding: 7px 10px;
+    border: 1px solid var(--linea);
+    border-radius: 4px;
+    margin-bottom: 6px;
+    background: rgba(243,239,226,0.03);
+  }
+  .fixture-row.played{ opacity: 0.55; }
+  .fixture-row .fx-score{ color: var(--dorado-claro); font-weight:700; min-width: 50px; text-align:center; }
+  .fixture-row .fx-pending{ color: var(--tiza-op); font-size: 10.5px; letter-spacing:1px; }
+
+  .knockout-zone{ margin-top: 10px; }
+  .ko-round{ margin-bottom: 22px; }
+  .ko-round h3{
+    font-family:'Anton', sans-serif;
+    font-size: 15px;
+    letter-spacing: 1.5px;
+    color: var(--dorado-claro);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    text-align:center;
+  }
+  .ko-tie{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap: 14px;
+    font-family:'Space Mono', monospace;
+    font-size: 13px;
+    padding: 10px;
+    border: 1px solid var(--linea);
+    border-radius: 4px;
+    margin-bottom: 8px;
+    background: rgba(243,239,226,0.03);
+  }
+  .ko-tie .ko-team{ flex:1; text-align:center; }
+  .ko-tie .ko-team.winner{ color: var(--dorado); font-weight:700; }
+  .ko-tie .ko-vs{ color: var(--tiza-op); font-size: 11px; }
+  .ko-tie.pending{ opacity: 0.7; }
+
+  .champion-banner{
+    text-align:center;
+    padding: 22px;
+    margin-bottom: 16px;
+  }
+  .champion-banner .cb-eyebrow{
+    font-family:'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--dorado-claro);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .champion-banner h2{
+    font-family:'Anton', sans-serif;
+    font-size: clamp(26px,6vw,40px);
+    color: var(--dorado);
+  }
+
+  .ball-spinner{
+    width: 70px; height: 70px;
+    margin: 10px auto 18px;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4), transparent 40%),
+      conic-gradient(from 0deg, #1a1a1a 0deg 30deg, #f3efe2 30deg 60deg, #1a1a1a 60deg 90deg, #f3efe2 90deg 120deg, #1a1a1a 120deg 150deg, #f3efe2 150deg 180deg, #1a1a1a 180deg 210deg, #f3efe2 210deg 240deg, #1a1a1a 240deg 270deg, #f3efe2 270deg 300deg, #1a1a1a 300deg 330deg, #f3efe2 330deg 360deg);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+    transition: transform 1.4s cubic-bezier(.2,.8,.2,1);
+  }
+  .ball-spinner.spinning{ animation: spin-ball 1.4s cubic-bezier(.2,.8,.2,1); }
+  @keyframes spin-ball{
+    from{ transform: rotate(0deg) scale(1); }
+    50%{ transform: rotate(900deg) scale(1.12); }
+    to{ transform: rotate(1440deg) scale(1); }
+  }
+
+  .roll-cta{ text-align:center; margin-bottom: 26px; }
+
+  .team-reveal{
+    text-align:center;
+    margin-bottom: 8px;
+    min-height: 70px;
+  }
+  .team-reveal .badge-tag{
+    display:inline-block;
+    font-family:'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--dorado-claro);
+    border: 1px solid var(--dorado-claro);
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  .team-reveal h3{
+    font-family:'Anton', sans-serif;
+    font-size: 26px;
+    letter-spacing: 1px;
+  }
+  .team-reveal .team-meta{
+    font-size: 13px;
+    color: var(--tiza-op);
+    margin-top: 2px;
+  }
+
+  /* Aviso de posiciones disponibles */
+  .pos-available-info {
+    text-align: center;
+    margin-bottom: 14px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--tiza-op);
+  }
+  .pos-available-info .pos-tag {
+    display: inline-block;
+    background: rgba(201,160,67,0.15);
+    border: 1px solid var(--dorado);
+    color: var(--dorado-claro);
+    border-radius: 3px;
+    padding: 2px 8px;
+    margin: 2px 3px;
+    font-size: 11px;
+  }
+
+  .slot-target{
+    text-align: center;
+    margin-bottom: 18px;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--tiza-op);
+    letter-spacing: 1px;
+  }
+  .slot-target b{ color: var(--dorado-claro); }
+
+  .player-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .player-card{
+    background: rgba(243,239,226,0.04);
+    border: 1px solid var(--linea);
+    border-radius: 5px;
+    padding: 14px 12px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    position: relative;
+  }
+  .player-card:hover{
+    background: rgba(201,160,67,0.1);
+    border-color: var(--dorado);
+    transform: translateY(-2px);
+  }
+  .player-card.disabled{
+    opacity: 0.3;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  .player-card .pname{
+    font-weight: 600;
+    font-size: 14.5px;
+    letter-spacing: 0.3px;
+    margin-bottom: 4px;
+    line-height: 1.15;
+  }
+  .player-card .ppos{
+    font-family:'Space Mono', monospace;
+    font-size: 10.5px;
+    color: var(--dorado-claro);
+    letter-spacing: 1px;
+  }
+  .player-card .prating{
+    position:absolute;
+    top: 10px; right: 10px;
+    font-family:'Anton', sans-serif;
+    font-size: 16px;
+    color: var(--tiza-op);
+  }
+  /* compatible = tiene slot vacío para su posición */
+  .player-card.has-slot .prating{ color: var(--dorado); }
+  .player-card.has-slot{ border-color: rgba(201,160,67,0.4); }
+
+  .reroll-row{
+    text-align:center;
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--tiza-op);
+  }
+
+  .pitch-mini{
+    position: relative;
+    width: 100%;
+    max-width: 360px;
+    margin: 0 auto 22px;
+    aspect-ratio: 0.78;
+    background: repeating-linear-gradient(0deg, #163d24 0px, #163d24 22px, #1a4628 22px, #1a4628 44px);
+    border: 2px solid rgba(243,239,226,0.25);
+    border-radius: 6px;
+  }
+  .pitch-mini::before{
+    content:'';
+    position:absolute; top:50%; left:5%; right:5%;
+    height:1px; background: rgba(243,239,226,0.25);
+  }
+  .pitch-mini::after{
+    content:'';
+    position:absolute; top:50%; left:50%;
+    width:46px; height:46px;
+    border:1px solid rgba(243,239,226,0.25);
+    border-radius:50%;
+    transform: translate(-50%,-50%);
+  }
+  .pitch-slot{
+    position:absolute;
+    transform: translate(-50%,-50%);
+    width: 56px;
+    text-align:center;
+  }
+  .pitch-slot .dot{
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: rgba(243,239,226,0.08);
+    border: 1.5px dashed rgba(243,239,226,0.4);
+    margin: 0 auto 3px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Space Mono', monospace;
+    font-size: 9px;
+    color: var(--tiza-op);
+  }
+  .pitch-slot.filled .dot{
+    background: var(--dorado);
+    border: 1.5px solid var(--dorado);
+    color: var(--azul-noche);
+    font-weight:700;
+  }
+  .pitch-slot .pslot-name{
+    font-size: 9.5px;
+    line-height: 1.1;
+    color: var(--tiza-op);
+    max-width: 60px;
+    margin: 0 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .pitch-slot.filled .pslot-name{ color: var(--tiza); }
+
+  .result-stage{ display:none; }
+  .result-stage.active{ display:block; }
+
+  .restart-prominent-box{
+    display: none;
+    background: linear-gradient(135deg, rgba(184,54,44,0.18), rgba(10,22,18,0.95));
+    border: 2px solid var(--rojo);
+    border-radius: 8px;
+    padding: 24px 20px;
+    margin-bottom: 18px;
+    text-align: center;
+    box-shadow: 0 0 0 1px rgba(184,54,44,0.2), 0 12px 30px rgba(0,0,0,0.4);
+  }
+  .restart-prominent-box.visible{ display: block; }
+  .restart-prominent-box .rp-title{
+    font-family: 'Anton', sans-serif;
+    font-size: 22px;
+    letter-spacing: 1.5px;
+    color: var(--tiza);
+    margin-bottom: 6px;
+  }
+  .restart-prominent-box .rp-msg{
+    font-size: 13px;
+    color: var(--tiza-op);
+    margin-bottom: 18px;
+    line-height: 1.5;
+  }
+  .btn-restart-big{
+    font-family: 'Anton', sans-serif;
+    font-size: 20px;
+    letter-spacing: 1.5px;
+    padding: 18px 48px;
+    background: var(--rojo);
+    color: var(--tiza);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+    box-shadow: 0 4px 0 #7a241c;
+  }
+  .btn-restart-big:hover{ transform: translateY(-2px); box-shadow: 0 6px 0 #7a241c; }
+  .btn-restart-big:active{ transform: translateY(2px); box-shadow: 0 2px 0 #7a241c; }
+
+  .scorecard{
+    background: linear-gradient(180deg, #0a1410, #0d1a14);
+    border: 1px solid var(--dorado);
+    border-radius: 8px;
+    padding: 32px 24px;
+    text-align: center;
+    margin-bottom: 22px;
+    box-shadow: 0 0 0 1px rgba(201,160,67,0.15), 0 20px 40px rgba(0,0,0,0.4);
+  }
+
+  .vs-row{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap: 18px;
+    margin-bottom: 6px;
+  }
+  .vs-team{
+    flex: 1;
+    max-width: 220px;
+  }
+  .vs-team .vt-name{
+    font-family:'Anton', sans-serif;
+    font-size: clamp(15px,3.2vw,20px);
+    letter-spacing: 0.5px;
+    line-height:1.1;
+  }
+  .vs-team .vt-tag{
+    font-family:'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--tiza-op);
+    letter-spacing:1px;
+    margin-top:4px;
+  }
+  .vs-score{
+    font-family:'Anton', sans-serif;
+    font-size: clamp(36px,8vw,56px);
+    letter-spacing: 2px;
+    color: var(--dorado);
+    min-width: 110px;
+  }
+
+  .result-tag{
+    display:inline-block;
+    font-family:'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 20px;
+    margin-top: 14px;
+  }
+  .result-tag.win{ background: rgba(201,160,67,0.15); color: var(--dorado-claro); border:1px solid var(--dorado-claro); }
+  .result-tag.lose{ background: rgba(184,54,44,0.15); color: #e6857d; border:1px solid #e6857d; }
+  .result-tag.draw{ background: rgba(243,239,226,0.08); color: var(--tiza-op); border:1px solid var(--linea); }
+
+  .match-log{
+    margin-top: 22px;
+    text-align: left;
+    border-top: 1px solid var(--linea);
+    padding-top: 18px;
+  }
+  .match-log .log-line{
+    font-family:'Space Mono', monospace;
+    font-size: 12.5px;
+    color: var(--tiza-op);
+    padding: 5px 0;
+    display:flex;
+    gap: 10px;
+  }
+  .match-log .log-min{ color: var(--dorado-claro); min-width: 36px; }
+  .match-log .log-line.goal{ color: var(--tiza); font-weight: 600; }
+
+  .final-squad{
+    margin-top: 24px;
+    border-top: 1px solid var(--linea);
+    padding-top: 18px;
+    text-align: left;
+  }
+  .final-squad h4{
+    font-family:'Anton', sans-serif;
+    font-size: 14px;
+    letter-spacing: 1.5px;
+    color: var(--dorado-claro);
+    margin-bottom: 10px;
+    text-align:center;
+  }
+  .squad-row{
+    display:flex;
+    justify-content: space-between;
+    font-size: 13px;
+    padding: 6px 4px;
+    border-bottom: 1px dashed var(--linea);
+  }
+  .squad-row .sq-pos{ color: var(--dorado-claro); font-family:'Space Mono',monospace; font-size:11px; width:42px;}
+  .squad-row .sq-name{ flex:1; }
+  .squad-row .sq-origin{ color: var(--tiza-op); font-size: 11.5px; }
+
+  .replay-row{ text-align:center; margin-top: 24px; }
+  .restart-btn-row{ margin-top: 14px; }
+
+  footer{
+    text-align:center;
+    margin-top: 40px;
+    font-size: 11px;
+    color: var(--tiza-op);
+    letter-spacing: 1px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .ball-spinner.spinning{ animation: none; }
+  }
+
+  /* ===== CON AMIGOS ===== */
+  .mode-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+  .mode-tab {
+    flex: 1;
+    font-family: 'Anton', sans-serif;
+    font-size: 16px;
+    letter-spacing: 1px;
+    padding: 16px 10px;
+    background: rgba(243,239,226,0.04);
+    border: 2px solid var(--linea);
+    color: var(--tiza-op);
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+  }
+  .mode-tab .mt-icon { display:block; font-size:24px; margin-bottom:6px; }
+  .mode-tab .mt-sub { display:block; font-family:'Space Mono',monospace; font-size:9px; letter-spacing:2px; margin-top:4px; opacity:0.7; }
+  .mode-tab:hover { border-color: var(--dorado); color: var(--tiza); background: rgba(201,160,67,0.08); }
+  .mode-tab.active { border-color: var(--dorado); color: var(--tiza); background: rgba(201,160,67,0.15); }
+
+  .mode-panel { display: none; }
+  .mode-panel.active { display: block; }
+
+  /* Pantalla de entrega entre turnos */
+  .handoff-screen {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #050e0b;
+    z-index: 200;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 32px;
+  }
+  .handoff-screen.active { display: flex; }
+  .handoff-screen .hs-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--dorado-claro);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .handoff-screen .hs-name {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(40px, 9vw, 68px);
+    color: var(--tiza);
+    margin-bottom: 10px;
+  }
+  .handoff-screen .hs-sub {
+    font-size: 14px;
+    color: var(--tiza-op);
+    margin-bottom: 32px;
+    max-width: 360px;
+  }
+
+  /* Banner de turno dentro del draft */
+  .turn-banner {
+    background: linear-gradient(135deg, rgba(201,160,67,0.18), rgba(10,22,18,0.9));
+    border: 1px solid var(--dorado);
+    border-radius: 6px;
+    padding: 14px 20px;
+    margin-bottom: 18px;
+    text-align: center;
+  }
+  .turn-banner .tb-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--dorado-claro);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .turn-banner .tb-name {
+    font-family: 'Anton', sans-serif;
+    font-size: 26px;
+    letter-spacing: 1px;
+    color: var(--tiza);
+  }
+  .turn-banner .tb-progress {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--tiza-op);
+    margin-top: 4px;
+  }
+
+  /* Hub torneo amigos */
+  .mp-hub-stage { display: none; }
+  .mp-hub-stage.active { display: block; }
+
+  .mp-group-block { margin-bottom: 26px; }
+  .mp-group-block h3 {
+    font-family: 'Anton', sans-serif;
+    font-size: 15px;
+    letter-spacing: 1px;
+    color: var(--dorado-claro);
+    margin-bottom: 10px;
+  }
+
+  .mp-fixture-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    padding: 8px 12px;
+    border: 1px solid var(--linea);
+    border-radius: 4px;
+    margin-bottom: 6px;
+    background: rgba(243,239,226,0.03);
+  }
+  .mp-fixture-row.played { opacity: 0.55; }
+  .mp-fixture-row .fx-score { color: var(--dorado-claro); font-weight: 700; min-width: 44px; text-align: center; }
+  .mp-fixture-row .fx-name { font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 600; }
+  .mp-fixture-row .fx-name.human { color: var(--dorado-claro); }
+
+  .mp-ko-tie {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    padding: 10px;
+    border: 1px solid var(--linea);
+    border-radius: 4px;
+    margin-bottom: 8px;
+    background: rgba(243,239,226,0.03);
+  }
+  .mp-ko-tie.pending { opacity: 0.6; }
+  .mp-ko-tie .kt-team { flex: 1; text-align: center; font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600; }
+  .mp-ko-tie .kt-team.winner { color: var(--dorado); }
+  .mp-ko-tie .kt-team.human { color: var(--dorado-claro); }
+  .mp-ko-tie .kt-vs { color: var(--tiza-op); font-size: 11px; }
+
+  .mp-champion-box {
+    text-align: center;
+    padding: 28px 20px;
+    margin-bottom: 20px;
+  }
+  .mp-champion-box .champ-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--dorado-claro);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .mp-champion-box h2 {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(28px, 6vw, 44px);
+    color: var(--dorado);
+  }
+
+  /* Nombre de jugadores en setup multi */
+  .mp-names-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .mp-name-input {
+    font-family: 'Oswald', sans-serif;
+    font-size: 15px;
+    padding: 12px 14px;
+    background: rgba(243,239,226,0.06);
+    border: 1px solid var(--linea);
+    border-radius: 4px;
+    color: var(--tiza);
+    width: 100%;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .mp-name-input:focus { border-color: var(--dorado); }
+  .mp-name-input::placeholder { color: var(--tiza-op); }
+</style>
+</head>
+<body>
+<div class="stadium-overlay"></div>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Draft histórico de fútbol</div>
+    <h1>ONCE DE <span>LEYENDA</span></h1>
+    <div class="subtitle">Tirá el balón, draftéa tu plantel entre clubes y selecciones de todas las épocas, y simulá el partido.</div>
+  </header>
+
+  <div class="scoreboard" id="scoreboard"></div>
+
+  <!-- SETUP -->
+  <div class="panel" id="setup-stage">
+
+    <!-- Tabs de modo -->
+    <div class="mode-tabs">
+      <button class="mode-tab active" id="tab-solo" onclick="switchMode('solo')">
+        <span class="mt-icon">🧍</span>
+        MODO SOLO
+        <span class="mt-sub">UN JUGADOR</span>
+      </button>
+      <button class="mode-tab" id="tab-multi" onclick="switchMode('multi')">
+        <span class="mt-icon">👥</span>
+        CON AMIGOS
+        <span class="mt-sub">2 A 4 JUGADORES</span>
+      </button>
+    </div>
+
+    <!-- Panel solo (original) -->
+    <div class="mode-panel active" id="panel-solo">
+      <h2>1. Elegí torneo</h2>
+      <div class="option-grid" id="tournament-options"></div>
+      <div class="tournament-info" id="tournament-info"></div>
+
+      <h2>2. Elegí formación</h2>
+      <div class="option-grid" id="formation-options"></div>
+      <div class="formation-field" id="formation-preview"></div>
+
+      <h2>3. Rating de jugadores durante el draft</h2>
+      <div class="option-grid" id="rating-vis-options"></div>
+      <div class="rating-vis-info" id="rating-vis-info">Elegí si querés ver el rating de cada jugador mientras armás tu plantel, o elegir a ciegas solo por nombre, posición y procedencia.</div>
+
+      <div class="cta-row">
+        <button class="btn-main" id="start-draft-btn">EMPEZAR DRAFT</button>
+      </div>
+    </div>
+
+    <!-- Panel multijugador -->
+    <div class="mode-panel" id="panel-multi">
+
+      <h2>1. ¿Cuántos jugadores?</h2>
+      <div class="option-grid" id="mp-count-options"></div>
+
+      <div id="mp-config-extra" style="display:none;">
+        <h2>2. Nombre de cada jugador</h2>
+        <div class="mp-names-grid" id="mp-names-grid"></div>
+
+        <h2>3. Elegí torneo</h2>
+        <div class="option-grid" id="mp-tournament-options"></div>
+        <div class="tournament-info" id="mp-tournament-info"></div>
+
+        <h2>4. Elegí formación (todos usan la misma)</h2>
+        <div class="option-grid" id="mp-formation-options"></div>
+        <div class="formation-field" id="mp-formation-preview"></div>
+
+        <h2>5. Rating durante el draft</h2>
+        <div class="option-grid" id="mp-rating-options"></div>
+        <div class="rating-vis-info" id="mp-rating-info">Elegí si los jugadores ven el rating mientras draftean.</div>
+
+        <div class="cta-row">
+          <button class="btn-main" id="start-mp-btn" disabled>EMPEZAR CON AMIGOS</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- DRAFT -->
+  <div class="draft-stage" id="draft-stage">
+    <div class="panel">
+      <div class="pitch-mini" id="pitch-mini"></div>
+
+      <div class="roll-cta" id="roll-cta">
+        <div class="ball-spinner" id="ball-spinner"></div>
+        <button class="btn-main" id="roll-btn">TIRAR EL BALÓN</button>
+        <div class="reroll-row" id="reroll-info"></div>
+      </div>
+
+      <div id="reveal-zone" style="display:none;">
+        <div class="team-reveal">
+          <div class="badge-tag" id="reveal-tag">PLANTILLA SORTEADA</div>
+          <h3 id="reveal-team-name"></h3>
+          <div class="team-meta" id="reveal-team-meta"></div>
+        </div>
+        <!-- Posiciones disponibles -->
+        <div class="pos-available-info" id="pos-available-info"></div>
+        <div class="slot-target">Solo podés elegir jugadores para las posiciones disponibles</div>
+        <div class="player-grid" id="player-grid"></div>
+        <div class="reroll-row">
+          <button class="btn-ghost" id="reroll-btn">🎲 Volver a tirar (te quedan <span id="reroll-count">3</span>)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOURNAMENT HUB (grupos + llave de eliminatorias) -->
+  <div class="tournament-stage" id="tournament-stage">
+    <div class="panel">
+      <h2 id="tournament-stage-title">FASE DE GRUPOS</h2>
+      <div id="groups-zone"></div>
+      <div id="knockout-zone"></div>
+      <div class="cta-row">
+        <button class="btn-main" id="play-next-match-btn">JUGAR SIGUIENTE PARTIDO</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT (de cada partido individual) -->
+  <div class="result-stage" id="result-stage">
+    <div class="scorecard" id="scorecard"></div>
+
+    <!-- Bloque prominente de derrota/reinicio -->
+    <div class="restart-prominent-box" id="restart-prominent-box">
+      <div class="rp-title" id="rp-title">❌ ELIMINADO DEL TORNEO</div>
+      <div class="rp-msg" id="rp-msg">Quedaste eliminado. Armá un nuevo equipo para volver a intentarlo.</div>
+      <button class="btn-restart-big" id="restart-prominent-btn">🔄 VOLVER A EMPEZAR</button>
+    </div>
+
+    <div class="replay-row">
+      <button class="btn-main" id="continue-tournament-btn">CONTINUAR TORNEO</button>
+      <div class="restart-btn-row">
+        <button class="btn-ghost" id="restart-btn">🔄 VOLVER A EMPEZAR</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>ONCE DE LEYENDA — un draft de fútbol con datos históricos, hecho para jugar y discutir con amigos.</footer>
+</div>
+
+<!-- PANTALLA DE ENTREGA (entre turnos de draft multijugador) -->
+<div class="handoff-screen" id="handoff-screen">
+  <div class="hs-label">ES EL TURNO DE</div>
+  <div class="hs-name" id="hs-name">Jugador</div>
+  <div class="hs-sub" id="hs-sub">Pasale el dispositivo y tocá cuando estés listo.</div>
+  <button class="btn-main" id="hs-ready-btn">▶ ESTOY LISTO, EMPEZAR MI DRAFT</button>
+</div>
+
+<!-- HUB TORNEO CON AMIGOS -->
+<div class="mp-hub-stage" id="mp-hub-stage">
+  <div class="panel" id="mp-hub-panel">
+    <!-- Se renderiza dinámicamente -->
+  </div>
+</div>
+
+<script>
+const POS = {
+  POR: 'Arquero',
+  LAT: 'Lateral',
+  DEF: 'Central',
+  MED: 'Mediocampista',
+  DEL: 'Delantero'
+};
+
+const FORMATIONS = {
+  '4-3-3': {
+    label: '4-3-3',
+    slots: [
+      {id:'POR', pos:'POR', x:50, y:92},
+      {id:'LD',  pos:'LAT', x:85, y:74},
+      {id:'DFC1',pos:'DEF', x:62, y:78},
+      {id:'DFC2',pos:'DEF', x:38, y:78},
+      {id:'LI',  pos:'LAT', x:15, y:74},
+      {id:'MC1', pos:'MED', x:30, y:52},
+      {id:'MC2', pos:'MED', x:50, y:48},
+      {id:'MC3', pos:'MED', x:70, y:52},
+      {id:'EXI', pos:'DEL', x:18, y:22},
+      {id:'DC',  pos:'DEL', x:50, y:14},
+      {id:'EXD', pos:'DEL', x:82, y:22},
+    ]
+  },
+  '4-4-2': {
+    label: '4-4-2',
+    slots: [
+      {id:'POR', pos:'POR', x:50, y:92},
+      {id:'LD',  pos:'LAT', x:85, y:74},
+      {id:'DFC1',pos:'DEF', x:62, y:78},
+      {id:'DFC2',pos:'DEF', x:38, y:78},
+      {id:'LI',  pos:'LAT', x:15, y:74},
+      {id:'MD',  pos:'MED', x:84, y:50},
+      {id:'MC1', pos:'MED', x:60, y:48},
+      {id:'MC2', pos:'MED', x:40, y:48},
+      {id:'MI',  pos:'MED', x:16, y:50},
+      {id:'DC1', pos:'DEL', x:38, y:16},
+      {id:'DC2', pos:'DEL', x:62, y:16},
+    ]
+  },
+  '4-2-3-1': {
+    label: '4-2-3-1',
+    slots: [
+      {id:'POR', pos:'POR', x:50, y:92},
+      {id:'LD',  pos:'LAT', x:85, y:74},
+      {id:'DFC1',pos:'DEF', x:62, y:78},
+      {id:'DFC2',pos:'DEF', x:38, y:78},
+      {id:'LI',  pos:'LAT', x:15, y:74},
+      {id:'MCD1',pos:'MED', x:38, y:58},
+      {id:'MCD2',pos:'MED', x:62, y:58},
+      {id:'MCO_I',pos:'MED', x:18, y:34},
+      {id:'MCO_C',pos:'MED', x:50, y:32},
+      {id:'MCO_D',pos:'MED', x:82, y:34},
+      {id:'DC',  pos:'DEL', x:50, y:13},
+    ]
+  },
+  '3-5-2': {
+    label: '3-5-2',
+    slots: [
+      {id:'POR', pos:'POR', x:50, y:92},
+      {id:'DFC1',pos:'DEF', x:72, y:78},
+      {id:'DFC2',pos:'DEF', x:50, y:80},
+      {id:'DFC3',pos:'DEF', x:28, y:78},
+      {id:'CD',  pos:'MED', x:90, y:55},
+      {id:'MC1', pos:'MED', x:65, y:50},
+      {id:'MC2', pos:'MED', x:50, y:46},
+      {id:'MC3', pos:'MED', x:35, y:50},
+      {id:'CI',  pos:'MED', x:10, y:55},
+      {id:'DC1', pos:'DEL', x:38, y:16},
+      {id:'DC2', pos:'DEL', x:62, y:16},
+    ]
+  }
+};
+
+const TEAMS = [
+  {
+    name: 'Brasil 1970', tag: 'Selección · Mundial 1970', type:'seleccion', country:'🇧🇷',
+    players: [
+      {name:'Félix', pos:'POR', rating:78},
+      {name:'Carlos Alberto', pos:'LAT', rating:86},
+      {name:'Brito', pos:'DEF', rating:80},
+      {name:'Piazza', pos:'DEF', rating:79},
+      {name:'Everaldo', pos:'LAT', rating:81},
+      {name:'Clodoaldo', pos:'MED', rating:82},
+      {name:'Gérson', pos:'MED', rating:88},
+      {name:'Rivellino', pos:'MED', rating:90},
+      {name:'Jairzinho', pos:'DEL', rating:91},
+      {name:'Tostão', pos:'DEL', rating:87},
+      {name:'Pelé', pos:'DEL', rating:98},
+    ]
+  },
+  {
+    name:'Argentina 1986', tag:'Selección · Mundial 1986', type:'seleccion', country:'🇦🇷',
+    players:[
+      {name:'Nery Pumpido', pos:'POR', rating:80},
+      {name:'José Luis Brown', pos:'DEF', rating:81},
+      {name:'Oscar Ruggeri', pos:'DEF', rating:84},
+      {name:'Julio Olarticoechea', pos:'LAT', rating:79},
+      {name:'José Luis Cuciuffo', pos:'LAT', rating:77},
+      {name:'Sergio Batista', pos:'MED', rating:78},
+      {name:'Ricardo Giusti', pos:'MED', rating:76},
+      {name:'Héctor Enrique', pos:'MED', rating:75},
+      {name:'Jorge Valdano', pos:'DEL', rating:85},
+      {name:'Jorge Burruchaga', pos:'DEL', rating:83},
+      {name:'Diego Maradona', pos:'DEL', rating:97},
+    ]
+  },
+  {
+    name:'Francia 1998', tag:'Selección · Mundial 1998', type:'seleccion', country:'🇫🇷',
+    players:[
+      {name:'Fabien Barthez', pos:'POR', rating:86},
+      {name:'Lilian Thuram', pos:'LAT', rating:88},
+      {name:'Marcel Desailly', pos:'DEF', rating:89},
+      {name:'Laurent Blanc', pos:'DEF', rating:87},
+      {name:'Bixente Lizarazu', pos:'LAT', rating:84},
+      {name:'Didier Deschamps', pos:'MED', rating:83},
+      {name:'Emmanuel Petit', pos:'MED', rating:85},
+      {name:'Youri Djorkaeff', pos:'MED', rating:86},
+      {name:'Zinedine Zidane', pos:'MED', rating:94},
+      {name:'Stéphane Guivarc\'h', pos:'DEL', rating:76},
+      {name:'Thierry Henry', pos:'DEL', rating:88},
+    ]
+  },
+  {
+    name:'España 2010', tag:'Selección · Mundial 2010', type:'seleccion', country:'🇪🇸',
+    players:[
+      {name:'Iker Casillas', pos:'POR', rating:90},
+      {name:'Sergio Ramos', pos:'LAT', rating:89},
+      {name:'Gerard Piqué', pos:'DEF', rating:87},
+      {name:'Carles Puyol', pos:'DEF', rating:88},
+      {name:'Joan Capdevila', pos:'LAT', rating:80},
+      {name:'Sergio Busquets', pos:'MED', rating:85},
+      {name:'Xabi Alonso', pos:'MED', rating:87},
+      {name:'Xavi Hernández', pos:'MED', rating:92},
+      {name:'Andrés Iniesta', pos:'MED', rating:93},
+      {name:'David Villa', pos:'DEL', rating:88},
+      {name:'Fernando Torres', pos:'DEL', rating:84},
+    ]
+  },
+  {
+    name:'Alemania 2014', tag:'Selección · Mundial 2014', type:'seleccion', country:'🇩🇪',
+    players:[
+      {name:'Manuel Neuer', pos:'POR', rating:93},
+      {name:'Philipp Lahm', pos:'LAT', rating:89},
+      {name:'Mats Hummels', pos:'DEF', rating:87},
+      {name:'Jérôme Boateng', pos:'DEF', rating:86},
+      {name:'Benedikt Höwedes', pos:'LAT', rating:78},
+      {name:'Toni Kroos', pos:'MED', rating:89},
+      {name:'Sami Khedira', pos:'MED', rating:84},
+      {name:'Bastian Schweinsteiger', pos:'MED', rating:88},
+      {name:'Mesut Özil', pos:'MED', rating:87},
+      {name:'Thomas Müller', pos:'DEL', rating:88},
+      {name:'Miroslav Klose', pos:'DEL', rating:85},
+    ]
+  },
+  {
+    name:'Italia 1982', tag:'Selección · Mundial 1982', type:'seleccion', country:'🇮🇹',
+    players:[
+      {name:'Dino Zoff', pos:'POR', rating:88},
+      {name:'Claudio Gentile', pos:'LAT', rating:84},
+      {name:'Gaetano Scirea', pos:'DEF', rating:88},
+      {name:'Fulvio Collovati', pos:'DEF', rating:79},
+      {name:'Antonio Cabrini', pos:'LAT', rating:82},
+      {name:'Marco Tardelli', pos:'MED', rating:85},
+      {name:'Giancarlo Antognoni', pos:'MED', rating:84},
+      {name:'Bruno Conti', pos:'MED', rating:83},
+      {name:'Francesco Graziani', pos:'DEL', rating:81},
+      {name:'Paolo Rossi', pos:'DEL', rating:89},
+      {name:'Alessandro Altobelli', pos:'DEL', rating:80},
+    ]
+  },
+  {
+    name:'Países Bajos 1974', tag:'Selección · Mundial 1974', type:'seleccion', country:'🇳🇱',
+    players:[
+      {name:'Jan Jongbloed', pos:'POR', rating:78},
+      {name:'Wim Suurbier', pos:'LAT', rating:80},
+      {name:'Rinus Israël', pos:'DEF', rating:78},
+      {name:'Arie Haan', pos:'MED', rating:84},
+      {name:'Ruud Krol', pos:'LAT', rating:84},
+      {name:'Wim van Hanegem', pos:'MED', rating:86},
+      {name:'Johan Neeskens', pos:'MED', rating:87},
+      {name:'Piet Keizer', pos:'DEL', rating:83},
+      {name:'Rob Rensenbrink', pos:'DEL', rating:85},
+      {name:'Johan Cruyff', pos:'DEL', rating:96},
+      {name:'Johnny Rep', pos:'DEL', rating:84},
+    ]
+  },
+  {
+    name:'Argentina 2022', tag:'Selección · Mundial 2022', type:'seleccion', country:'🇦🇷',
+    players:[
+      {name:'Emiliano Martínez', pos:'POR', rating:88},
+      {name:'Nahuel Molina', pos:'LAT', rating:83},
+      {name:'Cristian Romero', pos:'DEF', rating:86},
+      {name:'Nicolás Otamendi', pos:'DEF', rating:81},
+      {name:'Nicolás Tagliafico', pos:'LAT', rating:82},
+      {name:'Rodrigo De Paul', pos:'MED', rating:85},
+      {name:'Leandro Paredes', pos:'MED', rating:80},
+      {name:'Alexis Mac Allister', pos:'MED', rating:84},
+      {name:'Ángel Di María', pos:'DEL', rating:85},
+      {name:'Julián Álvarez', pos:'DEL', rating:86},
+      {name:'Lionel Messi', pos:'DEL', rating:97},
+    ]
+  },
+  {
+    name:'FC Barcelona 2009', tag:'Club · Temporada 2008-09', type:'club', country:'🔵🔴',
+    players:[
+      {name:'Víctor Valdés', pos:'POR', rating:85},
+      {name:'Dani Alves', pos:'LAT', rating:87},
+      {name:'Gerard Piqué', pos:'DEF', rating:86},
+      {name:'Carles Puyol', pos:'DEF', rating:88},
+      {name:'Éric Abidal', pos:'LAT', rating:83},
+      {name:'Sergio Busquets', pos:'MED', rating:83},
+      {name:'Xavi Hernández', pos:'MED', rating:91},
+      {name:'Andrés Iniesta', pos:'MED', rating:92},
+      {name:'Samuel Eto\'o', pos:'DEL', rating:90},
+      {name:'Thierry Henry', pos:'DEL', rating:87},
+      {name:'Lionel Messi', pos:'DEL', rating:94},
+    ]
+  },
+  {
+    name:'Real Madrid 2017', tag:'Club · Temporada 2016-17', type:'club', country:'⚪',
+    players:[
+      {name:'Keylor Navas', pos:'POR', rating:87},
+      {name:'Dani Carvajal', pos:'LAT', rating:85},
+      {name:'Sergio Ramos', pos:'LAT', rating:89},
+      {name:'Raphaël Varane', pos:'DEF', rating:86},
+      {name:'Marcelo', pos:'LAT', rating:87},
+      {name:'Casemiro', pos:'MED', rating:85},
+      {name:'Toni Kroos', pos:'MED', rating:89},
+      {name:'Luka Modrić', pos:'MED', rating:90},
+      {name:'Gareth Bale', pos:'DEL', rating:87},
+      {name:'Karim Benzema', pos:'DEL', rating:88},
+      {name:'Cristiano Ronaldo', pos:'DEL', rating:96},
+    ]
+  },
+  {
+    name:'AC Milan 1989', tag:'Club · Temporada 1988-89', type:'club', country:'🔴⚫',
+    players:[
+      {name:'Giovanni Galli', pos:'POR', rating:82},
+      {name:'Mauro Tassotti', pos:'LAT', rating:83},
+      {name:'Franco Baresi', pos:'DEF', rating:92},
+      {name:'Alessandro Costacurta', pos:'DEF', rating:84},
+      {name:'Paolo Maldini', pos:'LAT', rating:93},
+      {name:'Carlo Ancelotti', pos:'MED', rating:84},
+      {name:'Frank Rijkaard', pos:'MED', rating:88},
+      {name:'Roberto Donadoni', pos:'MED', rating:83},
+      {name:'Ruud Gullit', pos:'DEL', rating:90},
+      {name:'Marco van Basten', pos:'DEL', rating:93},
+      {name:'Daniele Massaro', pos:'DEL', rating:79},
+    ]
+  },
+  {
+    name:'Manchester United 1999', tag:'Club · Temporada 1998-99', type:'club', country:'🔴',
+    players:[
+      {name:'Peter Schmeichel', pos:'POR', rating:90},
+      {name:'Gary Neville', pos:'LAT', rating:83},
+      {name:'Jaap Stam', pos:'DEF', rating:89},
+      {name:'Ronny Johnsen', pos:'DEF', rating:81},
+      {name:'Denis Irwin', pos:'LAT', rating:82},
+      {name:'David Beckham', pos:'MED', rating:88},
+      {name:'Roy Keane', pos:'MED', rating:89},
+      {name:'Paul Scholes', pos:'MED', rating:86},
+      {name:'Ryan Giggs', pos:'DEL', rating:87},
+      {name:'Dwight Yorke', pos:'DEL', rating:85},
+      {name:'Andy Cole', pos:'DEL', rating:84},
+    ]
+  },
+  {
+    name:'Boca Juniors 2000', tag:'Club · Temporada 2000', type:'club', country:'🔵🟡',
+    players:[
+      {name:'Óscar Córdoba', pos:'POR', rating:84},
+      {name:'José Basualdo', pos:'MED', rating:80},
+      {name:'Hugo Ibarra', pos:'LAT', rating:80},
+      {name:'Nicolás Burdisso', pos:'DEF', rating:81},
+      {name:'Mauricio Serna', pos:'MED', rating:79},
+      {name:'Juan Román Riquelme', pos:'MED', rating:90},
+      {name:'Cristian Traverso', pos:'MED', rating:78},
+      {name:'Walter Samuel', pos:'DEF', rating:85},
+      {name:'Martín Palermo', pos:'DEL', rating:84},
+      {name:'Guillermo Barros Schelotto', pos:'DEL', rating:83},
+      {name:'Marcelo Delgado', pos:'DEL', rating:78},
+    ]
+  },
+  {
+    name:'River Plate 2018', tag:'Club · Temporada 2018', type:'club', country:'🔴⚪',
+    players:[
+      {name:'Franco Armani', pos:'POR', rating:84},
+      {name:'Gonzalo Montiel', pos:'LAT', rating:80},
+      {name:'Jonatan Maidana', pos:'DEF', rating:79},
+      {name:'Javier Pinola', pos:'DEF', rating:80},
+      {name:'Milton Casco', pos:'LAT', rating:78},
+      {name:'Exequiel Palacios', pos:'MED', rating:81},
+      {name:'Leonardo Ponzio', pos:'MED', rating:77},
+      {name:'Ignacio Fernández', pos:'MED', rating:82},
+      {name:'Gonzalo Martínez', pos:'DEL', rating:83},
+      {name:'Rafael Santos Borré', pos:'DEL', rating:82},
+      {name:'Lucas Pratto', pos:'DEL', rating:80},
+    ]
+  },
+  {
+    name:'Bayern Múnich 2013', tag:'Club · Temporada 2012-13', type:'club', country:'🔴',
+    players:[
+      {name:'Manuel Neuer', pos:'POR', rating:92},
+      {name:'Philipp Lahm', pos:'LAT', rating:89},
+      {name:'Jérôme Boateng', pos:'DEF', rating:86},
+      {name:'Dante', pos:'DEF', rating:84},
+      {name:'David Alaba', pos:'LAT', rating:85},
+      {name:'Bastian Schweinsteiger', pos:'MED', rating:88},
+      {name:'Javi Martínez', pos:'MED', rating:84},
+      {name:'Toni Kroos', pos:'MED', rating:88},
+      {name:'Arjen Robben', pos:'DEL', rating:88},
+      {name:'Franck Ribéry', pos:'DEL', rating:90},
+      {name:'Mario Mandžukić', pos:'DEL', rating:84},
+    ]
+  },
+  {
+    name:'Inglaterra 1966', tag:'Selección · Mundial 1966', type:'seleccion', country:'🏴',
+    players:[
+      {name:'Gordon Banks', pos:'POR', rating:88},
+      {name:'George Cohen', pos:'LAT', rating:80},
+      {name:'Jack Charlton', pos:'DEF', rating:83},
+      {name:'Bobby Moore', pos:'DEF', rating:92},
+      {name:'Ray Wilson', pos:'LAT', rating:79},
+      {name:'Nobby Stiles', pos:'MED', rating:81},
+      {name:'Alan Ball', pos:'MED', rating:84},
+      {name:'Bobby Charlton', pos:'MED', rating:91},
+      {name:'Roger Hunt', pos:'DEL', rating:81},
+      {name:'Geoff Hurst', pos:'DEL', rating:86},
+      {name:'Martin Peters', pos:'DEL', rating:82},
+    ]
+  },
+  {
+    name:'Portugal 2016', tag:'Selección · Eurocopa 2016', type:'seleccion', country:'🇵🇹',
+    players:[
+      {name:'Rui Patrício', pos:'POR', rating:83},
+      {name:'Cédric Soares', pos:'LAT', rating:78},
+      {name:'Pepe', pos:'DEF', rating:84},
+      {name:'José Fonte', pos:'DEF', rating:81},
+      {name:'Raphaël Guerreiro', pos:'LAT', rating:81},
+      {name:'William Carvalho', pos:'MED', rating:80},
+      {name:'Adrien Silva', pos:'MED', rating:78},
+      {name:'João Mário', pos:'MED', rating:79},
+      {name:'Renato Sanches', pos:'MED', rating:80},
+      {name:'Nani', pos:'DEL', rating:83},
+      {name:'Cristiano Ronaldo', pos:'DEL', rating:95},
+    ]
+  },
+  {
+    name:'Uruguay 1950', tag:'Selección · Mundial 1950', type:'seleccion', country:'🇺🇾',
+    players:[
+      {name:'Roque Máspoli', pos:'POR', rating:84},
+      {name:'Matías González', pos:'LAT', rating:77},
+      {name:'Eusebio Tejera', pos:'DEF', rating:78},
+      {name:'Schubert Gambetta', pos:'DEF', rating:77},
+      {name:'William Martínez', pos:'LAT', rating:76},
+      {name:'Rodolfo Paz', pos:'MED', rating:76},
+      {name:'Carlos González', pos:'MED', rating:77},
+      {name:'Alcides Ghiggia', pos:'DEL', rating:88},
+      {name:'Obdulio Varela', pos:'MED', rating:86},
+      {name:'Juan Alberto Schiaffino', pos:'DEL', rating:91},
+      {name:'Omar Míguez', pos:'DEL', rating:82},
+    ]
+  },
+  {
+    name:'Hungría 1954', tag:'Selección · Mundial 1954', type:'seleccion', country:'🇭🇺',
+    players:[
+      {name:'Gyula Grosics', pos:'POR', rating:87},
+      {name:'Jenő Buzánszky', pos:'LAT', rating:79},
+      {name:'Gyula Lóránt', pos:'DEF', rating:82},
+      {name:'Mihály Lantos', pos:'LAT', rating:80},
+      {name:'József Bozsik', pos:'MED', rating:88},
+      {name:'Nándor Hidegkuti', pos:'MED', rating:89},
+      {name:'Zoltán Czibor', pos:'DEL', rating:87},
+      {name:'Sándor Kocsis', pos:'DEL', rating:91},
+      {name:'Ferenc Puskás', pos:'DEL', rating:95},
+      {name:'László Budai', pos:'DEL', rating:82},
+      {name:'József Tóth', pos:'DEF', rating:76},
+    ]
+  },
+  {
+    name:'Checoslovaquia 1962', tag:'Selección · Mundial 1962', type:'seleccion', country:'🇨🇿',
+    players:[
+      {name:'Viliam Schrojf', pos:'POR', rating:85},
+      {name:'Ján Popluhár', pos:'DEF', rating:83},
+      {name:'Ladislav Novák', pos:'LAT', rating:79},
+      {name:'Svatopluk Pluskal', pos:'DEF', rating:80},
+      {name:'Ján Masopust', pos:'MED', rating:89},
+      {name:'Zdeněk Kvasňák', pos:'MED', rating:81},
+      {name:'Václav Mašek', pos:'DEL', rating:80},
+      {name:'Drahomír Novák', pos:'MED', rating:78},
+      {name:'Tomáš Pospíchal', pos:'LAT', rating:77},
+      {name:'Adolf Scherer', pos:'DEL', rating:83},
+      {name:'Josef Jelínek', pos:'DEL', rating:78},
+    ]
+  },
+  {
+    name:'Croacia 2018', tag:'Selección · Mundial 2018', type:'seleccion', country:'🇭🇷',
+    players:[
+      {name:'Danijel Subašić', pos:'POR', rating:84},
+      {name:'Šime Vrsaljko', pos:'LAT', rating:81},
+      {name:'Dejan Lovren', pos:'DEF', rating:82},
+      {name:'Domagoj Vida', pos:'DEF', rating:80},
+      {name:'Ivan Strinić', pos:'LAT', rating:78},
+      {name:'Ivan Rakitić', pos:'MED', rating:87},
+      {name:'Luka Modrić', pos:'MED', rating:94},
+      {name:'Marcelo Brozović', pos:'MED', rating:86},
+      {name:'Ante Rebić', pos:'DEL', rating:82},
+      {name:'Mario Mandžukić', pos:'DEL', rating:84},
+      {name:'Ivan Perišić', pos:'DEL', rating:83},
+    ]
+  },
+  {
+    name:'Bélgica 2018', tag:'Selección · Mundial 2018', type:'seleccion', country:'🇧🇪',
+    players:[
+      {name:'Thibaut Courtois', pos:'POR', rating:89},
+      {name:'Thomas Meunier', pos:'LAT', rating:80},
+      {name:'Toby Alderweireld', pos:'DEF', rating:86},
+      {name:'Vincent Kompany', pos:'DEF', rating:87},
+      {name:'Jan Vertonghen', pos:'LAT', rating:85},
+      {name:'Axel Witsel', pos:'MED', rating:84},
+      {name:'Marouane Fellaini', pos:'MED', rating:80},
+      {name:'Kevin De Bruyne', pos:'MED', rating:92},
+      {name:'Dries Mertens', pos:'DEL', rating:85},
+      {name:'Romelu Lukaku', pos:'DEL', rating:87},
+      {name:'Eden Hazard', pos:'DEL', rating:91},
+    ]
+  },
+  {
+    name:'Juventus 1996', tag:'Club · Temporada 1995-96', type:'club', country:'⚫⚪',
+    players:[
+      {name:'Angelo Peruzzi', pos:'POR', rating:84},
+      {name:'Moreno Torricelli', pos:'LAT', rating:79},
+      {name:'Ciro Ferrara', pos:'DEF', rating:82},
+      {name:'Demetrio Albertini', pos:'MED', rating:84},
+      {name:'Paolo Montero', pos:'DEF', rating:83},
+      {name:'Antonio Conte', pos:'MED', rating:82},
+      {name:'Didier Deschamps', pos:'MED', rating:84},
+      {name:'Zinedine Zidane', pos:'MED', rating:90},
+      {name:'Gianluca Vialli', pos:'DEL', rating:86},
+      {name:'Alessandro Del Piero', pos:'DEL', rating:91},
+      {name:'Fabrizio Ravanelli', pos:'DEL', rating:82},
+    ]
+  },
+  {
+    name:'Chelsea 2012', tag:'Club · Temporada 2011-12', type:'club', country:'🔵',
+    players:[
+      {name:'Petr Čech', pos:'POR', rating:88},
+      {name:'Branislav Ivanović', pos:'LAT', rating:83},
+      {name:'John Terry', pos:'DEF', rating:87},
+      {name:'Gary Cahill', pos:'DEF', rating:82},
+      {name:'Ashley Cole', pos:'LAT', rating:85},
+      {name:'John Obi Mikel', pos:'MED', rating:78},
+      {name:'Frank Lampard', pos:'MED', rating:88},
+      {name:'Ramires', pos:'MED', rating:80},
+      {name:'Juan Mata', pos:'DEL', rating:84},
+      {name:'Salomon Kalou', pos:'DEL', rating:78},
+      {name:'Didier Drogba', pos:'DEL', rating:90},
+    ]
+  },
+  {
+    name:'Ajax 1995', tag:'Club · Temporada 1994-95', type:'club', country:'🔴⚪',
+    players:[
+      {name:'Edwin van der Sar', pos:'POR', rating:87},
+      {name:'Michael Reiziger', pos:'LAT', rating:82},
+      {name:'Frank Rijkaard', pos:'DEF', rating:86},
+      {name:'Danny Blind', pos:'DEF', rating:83},
+      {name:'Marc Overmars', pos:'DEL', rating:87},
+      {name:'Edgar Davids', pos:'MED', rating:85},
+      {name:'Clarence Seedorf', pos:'MED', rating:87},
+      {name:'Ronald de Boer', pos:'MED', rating:84},
+      {name:'Finidi George', pos:'DEL', rating:83},
+      {name:'Patrick Kluivert', pos:'DEL', rating:89},
+      {name:'Jari Litmanen', pos:'DEL', rating:88},
+    ]
+  },
+  {
+    name:'Inter de Milán 2010', tag:'Club · Temporada 2009-10', type:'club', country:'🔵⚫',
+    players:[
+      {name:'Júlio César', pos:'POR', rating:87},
+      {name:'Maicon', pos:'LAT', rating:88},
+      {name:'Lúcio', pos:'DEF', rating:85},
+      {name:'Walter Samuel', pos:'DEF', rating:83},
+      {name:'Cristian Chivu', pos:'LAT', rating:79},
+      {name:'Dejan Stanković', pos:'MED', rating:84},
+      {name:'Thiago Motta', pos:'MED', rating:80},
+      {name:'Wesley Sneijder', pos:'MED', rating:90},
+      {name:'Goran Pandev', pos:'DEL', rating:82},
+      {name:'Samuel Eto\'o', pos:'DEL', rating:88},
+      {name:'Diego Milito', pos:'DEL', rating:86},
+    ]
+  },
+  {
+    name:'Flamengo 2019', tag:'Club · Temporada 2019', type:'club', country:'🔴⚫',
+    players:[
+      {name:'Diego Alves', pos:'POR', rating:83},
+      {name:'Rafinha', pos:'LAT', rating:82},
+      {name:'Pablo Marí', pos:'DEF', rating:79},
+      {name:'Rodrigo Caio', pos:'DEF', rating:80},
+      {name:'Filipe Luís', pos:'LAT', rating:83},
+      {name:'Willian Arão', pos:'MED', rating:80},
+      {name:'Gerson', pos:'MED', rating:82},
+      {name:'Éverton Ribeiro', pos:'MED', rating:84},
+      {name:'Bruno Henrique', pos:'DEL', rating:83},
+      {name:'Gabriel Barbosa (Gabigol)', pos:'DEL', rating:86},
+      {name:'Giorgian De Arrascaeta', pos:'DEL', rating:85},
+    ]
+  },
+
+  /* ===== SELECCIONES NUEVAS ===== */
+  {
+    name:'Brasil 2002', tag:'Selección · Mundial 2002', type:'seleccion', country:'🇧🇷',
+    players:[
+      {name:'Marcos', pos:'POR', rating:82},
+      {name:'Cafu', pos:'LAT', rating:90},
+      {name:'Lúcio', pos:'DEF', rating:86},
+      {name:'Edmílson', pos:'DEF', rating:80},
+      {name:'Roberto Carlos', pos:'LAT', rating:91},
+      {name:'Gilberto Silva', pos:'MED', rating:82},
+      {name:'Juninho Pernambucano', pos:'MED', rating:86},
+      {name:'Ronaldinho', pos:'MED', rating:93},
+      {name:'Rivaldo', pos:'DEL', rating:91},
+      {name:'Ronaldo', pos:'DEL', rating:97},
+      {name:'Kaká', pos:'DEL', rating:89},
+    ]
+  },
+  {
+    name:'Argentina 1978', tag:'Selección · Mundial 1978', type:'seleccion', country:'🇦🇷',
+    players:[
+      {name:'Ubaldo Fillol', pos:'POR', rating:86},
+      {name:'Jorge Olguín', pos:'LAT', rating:78},
+      {name:'Luis Galván', pos:'DEF', rating:80},
+      {name:'Daniel Passarella', pos:'DEF', rating:87},
+      {name:'Alberto Tarantini', pos:'LAT', rating:78},
+      {name:'Américo Gallego', pos:'MED', rating:79},
+      {name:'Osvaldo Ardiles', pos:'MED', rating:85},
+      {name:'Leopoldo Luque', pos:'DEL', rating:83},
+      {name:'Mario Kempes', pos:'DEL', rating:90},
+      {name:'Daniel Bertoni', pos:'DEL', rating:81},
+      {name:'René Houseman', pos:'DEL', rating:80},
+    ]
+  },
+  {
+    name:'Alemania 1974', tag:'Selección · Mundial 1974', type:'seleccion', country:'🇩🇪',
+    players:[
+      {name:'Sepp Maier', pos:'POR', rating:88},
+      {name:'Berti Vogts', pos:'LAT', rating:82},
+      {name:'Franz Beckenbauer', pos:'DEF', rating:96},
+      {name:'Hans-Georg Schwarzenbeck', pos:'DEF', rating:82},
+      {name:'Paul Breitner', pos:'LAT', rating:85},
+      {name:'Wolfgang Overath', pos:'MED', rating:87},
+      {name:'Rainer Bonhof', pos:'MED', rating:82},
+      {name:'Uli Hoeneß', pos:'DEL', rating:84},
+      {name:'Bernd Hölzenbein', pos:'DEL', rating:82},
+      {name:'Gerd Müller', pos:'DEL', rating:95},
+      {name:'Helmut Haller', pos:'DEL', rating:80},
+    ]
+  },
+  {
+    name:'Francia 2018', tag:'Selección · Mundial 2018', type:'seleccion', country:'🇫🇷',
+    players:[
+      {name:'Hugo Lloris', pos:'POR', rating:87},
+      {name:'Benjamin Pavard', pos:'LAT', rating:82},
+      {name:'Raphaël Varane', pos:'DEF', rating:88},
+      {name:'Samuel Umtiti', pos:'DEF', rating:84},
+      {name:'Lucas Hernández', pos:'LAT', rating:83},
+      {name:'N\'Golo Kanté', pos:'MED', rating:90},
+      {name:'Paul Pogba', pos:'MED', rating:87},
+      {name:'Blaise Matuidi', pos:'MED', rating:82},
+      {name:'Olivier Giroud', pos:'DEL', rating:82},
+      {name:'Antoine Griezmann', pos:'DEL', rating:89},
+      {name:'Kylian Mbappé', pos:'DEL', rating:93},
+    ]
+  },
+  {
+    name:'Italia 2006', tag:'Selección · Mundial 2006', type:'seleccion', country:'🇮🇹',
+    players:[
+      {name:'Gianluigi Buffon', pos:'POR', rating:92},
+      {name:'Gianluca Zambrotta', pos:'LAT', rating:84},
+      {name:'Fabio Cannavaro', pos:'DEF', rating:90},
+      {name:'Alessandro Nesta', pos:'DEF', rating:89},
+      {name:'Fabio Grosso', pos:'LAT', rating:79},
+      {name:'Gennaro Gattuso', pos:'MED', rating:83},
+      {name:'Andrea Pirlo', pos:'MED', rating:91},
+      {name:'Mauro Camoranesi', pos:'MED', rating:82},
+      {name:'Francesco Totti', pos:'DEL', rating:90},
+      {name:'Alessandro Del Piero', pos:'DEL', rating:88},
+      {name:'Luca Toni', pos:'DEL', rating:84},
+    ]
+  },
+  {
+    name:'España 2012', tag:'Selección · Eurocopa 2012', type:'seleccion', country:'🇪🇸',
+    players:[
+      {name:'Iker Casillas', pos:'POR', rating:91},
+      {name:'Álvaro Arbeloa', pos:'LAT', rating:78},
+      {name:'Gerard Piqué', pos:'DEF', rating:88},
+      {name:'Sergio Ramos', pos:'DEF', rating:90},
+      {name:'Jordi Alba', pos:'LAT', rating:86},
+      {name:'Sergio Busquets', pos:'MED', rating:88},
+      {name:'Xavi Hernández', pos:'MED', rating:94},
+      {name:'Andrés Iniesta', pos:'MED', country:'🇪🇸', rating:94},
+      {name:'David Silva', pos:'DEL', rating:88},
+      {name:'Fernando Torres', pos:'DEL', rating:85},
+      {name:'Cesc Fàbregas', pos:'DEL', rating:87},
+    ]
+  },
+  {
+    name:'Países Bajos 2010', tag:'Selección · Mundial 2010', type:'seleccion', country:'🇳🇱',
+    players:[
+      {name:'Maarten Stekelenburg', pos:'POR', rating:82},
+      {name:'Gregory van der Wiel', pos:'LAT', rating:80},
+      {name:'John Heitinga', pos:'DEF', rating:81},
+      {name:'Joris Mathijsen', pos:'DEF', rating:79},
+      {name:'Giovanni van Bronckhorst', pos:'LAT', rating:83},
+      {name:'Mark van Bommel', pos:'MED', rating:83},
+      {name:'Nigel de Jong', pos:'MED', rating:80},
+      {name:'Wesley Sneijder', pos:'MED', rating:89},
+      {name:'Arjen Robben', pos:'DEL', rating:89},
+      {name:'Dirk Kuyt', pos:'DEL', rating:82},
+      {name:'Robin van Persie', pos:'DEL', rating:88},
+    ]
+  },
+  {
+    name:'Uruguay 2010', tag:'Selección · Mundial 2010', type:'seleccion', country:'🇺🇾',
+    players:[
+      {name:'Fernando Muslera', pos:'POR', rating:82},
+      {name:'Maxi Pereira', pos:'LAT', rating:79},
+      {name:'Diego Lugano', pos:'DEF', rating:82},
+      {name:'Diego Godín', pos:'DEF', rating:87},
+      {name:'Martín Cáceres', pos:'LAT', rating:80},
+      {name:'Álvaro Pereira', pos:'MED', rating:78},
+      {name:'Diego Pérez', pos:'MED', rating:77},
+      {name:'Egidio Arévalo Ríos', pos:'MED', rating:78},
+      {name:'Edinson Cavani', pos:'DEL', rating:88},
+      {name:'Diego Forlán', pos:'DEL', rating:89},
+      {name:'Luis Suárez', pos:'DEL', rating:92},
+    ]
+  },
+  {
+    name:'México 1986', tag:'Selección · Mundial 1986', type:'seleccion', country:'🇲🇽',
+    players:[
+      {name:'Pablo Larios', pos:'POR', rating:80},
+      {name:'Manuel Negrete', pos:'MED', rating:83},
+      {name:'Fernando Quirarte', pos:'DEF', rating:80},
+      {name:'Félix Cruz', pos:'DEF', rating:77},
+      {name:'Héctor Sanabria', pos:'LAT', rating:76},
+      {name:'Carlos de los Cobos', pos:'MED', rating:78},
+      {name:'Tomás Boy', pos:'MED', rating:77},
+      {name:'Hugo Sánchez', pos:'DEL', rating:91},
+      {name:'Luis Flores', pos:'LAT', rating:76},
+      {name:'Raúl Servín', pos:'DEL', rating:77},
+      {name:'Carlos Muñoz', pos:'DEL', rating:78},
+    ]
+  },
+  {
+    name:'Senegal 2002', tag:'Selección · Mundial 2002', type:'seleccion', country:'🇸🇳',
+    players:[
+      {name:'Tony Sylva', pos:'POR', rating:80},
+      {name:'Omar Daf', pos:'LAT', rating:77},
+      {name:'Lamine Diatta', pos:'DEF', rating:79},
+      {name:'Ferdinand Coly', pos:'DEF', rating:78},
+      {name:'Pape Thiaw', pos:'LAT', rating:76},
+      {name:'Salif Diao', pos:'MED', rating:79},
+      {name:'Aliou Cissé', pos:'MED', rating:78},
+      {name:'Papa Bouba Diop', pos:'MED', rating:81},
+      {name:'El Hadji Diouf', pos:'DEL', rating:83},
+      {name:'Khalilou Fadiga', pos:'DEL', rating:81},
+      {name:'Henri Camara', pos:'DEL', rating:80},
+    ]
+  },
+  {
+    name:'Corea del Sur 2002', tag:'Selección · Mundial 2002', type:'seleccion', country:'🇰🇷',
+    players:[
+      {name:'Lee Woon-jae', pos:'POR', rating:81},
+      {name:'Kim Tae-young', pos:'LAT', rating:78},
+      {name:'Choi Jin-cheul', pos:'DEF', rating:79},
+      {name:'Hong Myung-bo', pos:'DEF', rating:85},
+      {name:'Kim Nam-il', pos:'LAT', rating:77},
+      {name:'Park Ji-sung', pos:'MED', rating:85},
+      {name:'Lee Young-pyo', pos:'MED', rating:80},
+      {name:'Yoo Sang-chul', pos:'MED', rating:81},
+      {name:'Ahn Jung-hwan', pos:'DEL', rating:81},
+      {name:'Hwang Sun-hong', pos:'DEL', rating:80},
+      {name:'Choi Yong-soo', pos:'DEL', rating:79},
+    ]
+  },
+  {
+    name:'Marruecos 2022', tag:'Selección · Mundial 2022', type:'seleccion', country:'🇲🇦',
+    players:[
+      {name:'Yassine Bounou', pos:'POR', rating:87},
+      {name:'Achraf Hakimi', pos:'LAT', rating:88},
+      {name:'Nayef Aguerd', pos:'DEF', rating:82},
+      {name:'Romain Saïss', pos:'DEF', rating:81},
+      {name:'Noussair Mazraoui', pos:'LAT', rating:83},
+      {name:'Selim Amallah', pos:'MED', rating:78},
+      {name:'Azzedine Ounahi', pos:'MED', rating:80},
+      {name:'Sofyan Amrabat', pos:'MED', rating:84},
+      {name:'Hakim Ziyech', pos:'DEL', rating:84},
+      {name:'Youssef En-Nesyri', pos:'DEL', rating:83},
+      {name:'Sofiane Boufal', pos:'DEL', rating:81},
+    ]
+  },
+  {
+    name:'Alemania 1990', tag:'Selección · Mundial 1990', type:'seleccion', country:'🇩🇪',
+    players:[
+      {name:'Bodo Illgner', pos:'POR', rating:84},
+      {name:'Thomas Berthold', pos:'LAT', rating:80},
+      {name:'Klaus Augenthaler', pos:'DEF', rating:82},
+      {name:'Jürgen Kohler', pos:'DEF', rating:85},
+      {name:'Andreas Brehme', pos:'LAT', rating:84},
+      {name:'Lothar Matthäus', pos:'MED', rating:93},
+      {name:'Guido Buchwald', pos:'MED', rating:82},
+      {name:'Thomas Häßler', pos:'MED', rating:83},
+      {name:'Rudi Völler', pos:'DEL', rating:85},
+      {name:'Jürgen Klinsmann', pos:'DEL', rating:87},
+      {name:'Pierre Littbarski', pos:'DEL', rating:82},
+    ]
+  },
+  {
+    name:'Camerún 1990', tag:'Selección · Mundial 1990', type:'seleccion', country:'🇨🇲',
+    players:[
+      {name:'Thomas N\'Kono', pos:'POR', rating:83},
+      {name:'Stephen Tataw', pos:'LAT', rating:77},
+      {name:'Victor Ndip Akem', pos:'DEF', rating:76},
+      {name:'Emmanuel Kunde', pos:'DEF', rating:77},
+      {name:'Benjamin Massing', pos:'LAT', rating:76},
+      {name:'Emmanuel Maboang', pos:'MED', rating:76},
+      {name:'Cyrille Makanaky', pos:'MED', rating:78},
+      {name:'Louis Paul Mfédé', pos:'MED', rating:77},
+      {name:'François Omam-Biyik', pos:'DEL', rating:80},
+      {name:'Roger Milla', pos:'DEL', rating:86},
+      {name:'Eugène Ekéké', pos:'DEL', rating:79},
+    ]
+  },
+  {
+    name:'Portugal 2004', tag:'Selección · Eurocopa 2004', type:'seleccion', country:'🇵🇹',
+    players:[
+      {name:'Ricardo', pos:'POR', rating:82},
+      {name:'Miguel', pos:'LAT', rating:79},
+      {name:'Fernando Couto', pos:'DEF', rating:84},
+      {name:'Jorge Andrade', pos:'DEF', rating:80},
+      {name:'Nuno Valente', pos:'LAT', rating:78},
+      {name:'Costinha', pos:'MED', rating:78},
+      {name:'Maniche', pos:'MED', rating:82},
+      {name:'Luís Figo', pos:'DEL', rating:91},
+      {name:'Deco', pos:'MED', rating:89},
+      {name:'Rui Costa', pos:'DEL', rating:87},
+      {name:'Cristiano Ronaldo', pos:'DEL', rating:86},
+    ]
+  },
+  {
+    name:'Dinamarca 1992', tag:'Selección · Eurocopa 1992', type:'seleccion', country:'🇩🇰',
+    players:[
+      {name:'Peter Schmeichel', pos:'POR', rating:90},
+      {name:'John Sivebæk', pos:'LAT', rating:78},
+      {name:'Kent Nielsen', pos:'DEF', rating:80},
+      {name:'Lars Olsen', pos:'DEF', rating:79},
+      {name:'Henrik Andersen', pos:'LAT', rating:77},
+      {name:'Kim Vilfort', pos:'MED', rating:80},
+      {name:'Henrik Larsen', pos:'MED', rating:82},
+      {name:'John Jensen', pos:'MED', rating:79},
+      {name:'Brian Laudrup', pos:'DEL', rating:89},
+      {name:'Michael Laudrup', pos:'DEL', rating:92},
+      {name:'Flemming Povlsen', pos:'DEL', rating:80},
+    ]
+  },
+  {
+    name:'Ghana 2010', tag:'Selección · Mundial 2010', type:'seleccion', country:'🇬🇭',
+    players:[
+      {name:'Richard Kingson', pos:'POR', rating:79},
+      {name:'Hans Sarpei', pos:'LAT', rating:77},
+      {name:'John Mensah', pos:'DEF', rating:80},
+      {name:'Jonathan Mensah', pos:'DEF', rating:78},
+      {name:'John Pantsil', pos:'LAT', rating:76},
+      {name:'Anthony Annan', pos:'MED', rating:78},
+      {name:'André Ayew', pos:'MED', rating:82},
+      {name:'Kevin-Prince Boateng', pos:'MED', rating:81},
+      {name:'Asamoah Gyan', pos:'DEL', rating:84},
+      {name:'Sulley Muntari', pos:'DEL', rating:82},
+      {name:'Stephen Appiah', pos:'MED', rating:83},
+    ]
+  },
+
+  /* ===== CLUBES NUEVOS ===== */
+  {
+    name:'Liverpool 2019', tag:'Club · Temporada 2018-19', type:'club', country:'🔴',
+    players:[
+      {name:'Alisson Becker', pos:'POR', rating:91},
+      {name:'Trent Alexander-Arnold', pos:'LAT', rating:87},
+      {name:'Joël Matip', pos:'DEF', rating:82},
+      {name:'Virgil van Dijk', pos:'DEF', rating:92},
+      {name:'Andrew Robertson', pos:'LAT', rating:86},
+      {name:'Jordan Henderson', pos:'MED', rating:83},
+      {name:'Georginio Wijnaldum', pos:'MED', rating:83},
+      {name:'Fabinho', pos:'MED', rating:85},
+      {name:'Mohamed Salah', pos:'DEL', rating:92},
+      {name:'Roberto Firmino', pos:'DEL', rating:85},
+      {name:'Sadio Mané', pos:'DEL', rating:91},
+    ]
+  },
+  {
+    name:'FC Barcelona 2015', tag:'Club · Temporada 2014-15', type:'club', country:'🔵🔴',
+    players:[
+      {name:'Marc-André ter Stegen', pos:'POR', rating:87},
+      {name:'Dani Alves', pos:'LAT', rating:86},
+      {name:'Gerard Piqué', pos:'DEF', rating:87},
+      {name:'Javier Mascherano', pos:'DEF', rating:84},
+      {name:'Jordi Alba', pos:'LAT', rating:85},
+      {name:'Sergio Busquets', pos:'MED', rating:88},
+      {name:'Xavi Hernández', pos:'MED', rating:89},
+      {name:'Andrés Iniesta', pos:'MED', rating:91},
+      {name:'Neymar', pos:'DEL', rating:93},
+      {name:'Luis Suárez', pos:'DEL', rating:92},
+      {name:'Lionel Messi', pos:'DEL', rating:97},
+    ]
+  },
+  {
+    name:'Real Madrid 2002', tag:'Club · Temporada 2001-02', type:'club', country:'⚪',
+    players:[
+      {name:'César Sánchez', pos:'POR', rating:80},
+      {name:'Michel Salgado', pos:'LAT', rating:82},
+      {name:'Fernando Hierro', pos:'DEF', rating:86},
+      {name:'Iván Helguera', pos:'DEF', rating:82},
+      {name:'Roberto Carlos', pos:'LAT', rating:90},
+      {name:'Claude Makélélé', pos:'MED', rating:88},
+      {name:'Steve McManaman', pos:'MED', rating:80},
+      {name:'Zinedine Zidane', pos:'MED', rating:96},
+      {name:'Luís Figo', pos:'DEL', rating:92},
+      {name:'Raúl', pos:'DEL', rating:88},
+      {name:'Ronaldo', pos:'DEL', rating:96},
+    ]
+  },
+  {
+    name:'Paris Saint-Germain 2022', tag:'Club · Temporada 2021-22', type:'club', country:'🔵🔴',
+    players:[
+      {name:'Gianluigi Donnarumma', pos:'POR', rating:90},
+      {name:'Achraf Hakimi', pos:'LAT', rating:87},
+      {name:'Marquinhos', pos:'DEF', rating:88},
+      {name:'Presnel Kimpembe', pos:'DEF', rating:82},
+      {name:'Nuno Mendes', pos:'LAT', rating:83},
+      {name:'Leandro Paredes', pos:'MED', rating:81},
+      {name:'Marco Verratti', pos:'MED', rating:89},
+      {name:'Idrissa Gueye', pos:'MED', rating:82},
+      {name:'Neymar', pos:'DEL', rating:91},
+      {name:'Lionel Messi', pos:'DEL', rating:93},
+      {name:'Kylian Mbappé', pos:'DEL', rating:95},
+    ]
+  },
+  {
+    name:'Manchester City 2023', tag:'Club · Temporada 2022-23', type:'club', country:'🔵',
+    players:[
+      {name:'Ederson', pos:'POR', rating:89},
+      {name:'Kyle Walker', pos:'LAT', rating:85},
+      {name:'Rúben Dias', pos:'DEF', rating:89},
+      {name:'Manuel Akanji', pos:'DEF', rating:83},
+      {name:'João Cancelo', pos:'LAT', rating:86},
+      {name:'Rodri', pos:'MED', rating:91},
+      {name:'Kevin De Bruyne', pos:'MED', rating:93},
+      {name:'Bernardo Silva', pos:'MED', rating:88},
+      {name:'Phil Foden', pos:'DEL', rating:89},
+      {name:'Jack Grealish', pos:'DEL', rating:84},
+      {name:'Erling Haaland', pos:'DEL', rating:94},
+    ]
+  },
+  {
+    name:'Arsenal 2003', tag:'Club · Temporada 2003-04 (Invencibles)', type:'club', country:'🔴',
+    players:[
+      {name:'Jens Lehmann', pos:'POR', rating:85},
+      {name:'Lauren', pos:'LAT', rating:80},
+      {name:'Sol Campbell', pos:'DEF', rating:87},
+      {name:'Ashley Cole', pos:'LAT', rating:85},
+      {name:'Kolo Touré', pos:'DEF', rating:82},
+      {name:'Patrick Vieira', pos:'MED', rating:91},
+      {name:'Gilberto Silva', pos:'MED', rating:82},
+      {name:'Robert Pires', pos:'MED', rating:87},
+      {name:'Freddie Ljungberg', pos:'DEL', rating:83},
+      {name:'Thierry Henry', pos:'DEL', rating:93},
+      {name:'Dennis Bergkamp', pos:'DEL', rating:90},
+    ]
+  },
+  {
+    name:'Borussia Dortmund 2013', tag:'Club · Temporada 2012-13', type:'club', country:'🟡⚫',
+    players:[
+      {name:'Roman Weidenfeller', pos:'POR', rating:83},
+      {name:'Łukasz Piszczek', pos:'LAT', rating:83},
+      {name:'Neven Subotić', pos:'DEF', rating:82},
+      {name:'Mats Hummels', pos:'DEF', rating:87},
+      {name:'Marcel Schmelzer', pos:'LAT', rating:80},
+      {name:'Sven Bender', pos:'MED', rating:80},
+      {name:'Ilkay Gündoğan', pos:'MED', rating:84},
+      {name:'Marco Reus', pos:'DEL', rating:88},
+      {name:'Henrikh Mkhitaryan', pos:'MED', rating:84},
+      {name:'Robert Lewandowski', pos:'DEL', rating:90},
+      {name:'Mario Götze', pos:'DEL', rating:86},
+    ]
+  },
+  {
+    name:'Celtic 1967', tag:'Club · Temporada 1966-67 (Leones de Lisboa)', type:'club', country:'🟢⚪',
+    players:[
+      {name:'Ronnie Simpson', pos:'POR', rating:82},
+      {name:'Jim Craig', pos:'LAT', rating:78},
+      {name:'Billy McNeill', pos:'DEF', rating:85},
+      {name:'John Clark', pos:'DEF', rating:80},
+      {name:'Tommy Gemmell', pos:'LAT', rating:82},
+      {name:'Bobby Murdoch', pos:'MED', rating:83},
+      {name:'Bertie Auld', pos:'MED', rating:82},
+      {name:'Bobby Lennox', pos:'DEL', rating:83},
+      {name:'Jimmy Johnstone', pos:'DEL', rating:89},
+      {name:'Willie Wallace', pos:'DEL', rating:81},
+      {name:'Stevie Chalmers', pos:'DEL', rating:80},
+    ]
+  },
+  {
+    name:'Independiente 1984', tag:'Club · Copa Libertadores 1984', type:'club', country:'🔴',
+    players:[
+      {name:'Miguel Ángel', pos:'POR', rating:81},
+      {name:'Jorge Comas', pos:'LAT', rating:76},
+      {name:'Juan Carlos Comisso', pos:'DEF', rating:79},
+      {name:'Daniel Killer', pos:'DEF', rating:80},
+      {name:'Carlos Fren', pos:'LAT', rating:76},
+      {name:'Jorge Burruchaga', pos:'MED', rating:83},
+      {name:'Ricardo Giusti', pos:'MED', rating:79},
+      {name:'Carlos Enrique', pos:'MED', rating:78},
+      {name:'Ricardo Bochini', pos:'DEL', rating:88},
+      {name:'Jorge Valdano', pos:'DEL', rating:84},
+      {name:'Mario Moirón', pos:'DEL', rating:76},
+    ]
+  },
+  {
+    name:'Santos 1963', tag:'Club · Temporada 1962-63', type:'club', country:'⚪⚫',
+    players:[
+      {name:'Gilmar', pos:'POR', rating:87},
+      {name:'Lima', pos:'LAT', rating:79},
+      {name:'Mauro', pos:'DEF', rating:82},
+      {name:'Calvet', pos:'DEF', rating:79},
+      {name:'Olavo', pos:'LAT', rating:77},
+      {name:'Mengálvio', pos:'MED', rating:82},
+      {name:'Formiga', pos:'MED', rating:81},
+      {name:'Dorval', pos:'DEL', rating:83},
+      {name:'Pagão', pos:'MED', rating:80},
+      {name:'Pelé', pos:'DEL', rating:99},
+      {name:'Pepe', pos:'DEL', rating:84},
+    ]
+  },
+  {
+    name:'Estudiantes 1968', tag:'Club · Copa Libertadores 1968', type:'club', country:'🔵⚪',
+    players:[
+      {name:'Alberto Poletti', pos:'POR', rating:80},
+      {name:'Ramón Aguirre Suárez', pos:'LAT', rating:77},
+      {name:'Oscar Malbernat', pos:'DEF', rating:79},
+      {name:'Eduardo Manera', pos:'DEF', rating:78},
+      {name:'Raúl Madero', pos:'LAT', rating:76},
+      {name:'Juan Echecopar', pos:'MED', rating:78},
+      {name:'Carlos Bilardo', pos:'MED', rating:80},
+      {name:'Eduardo Flores', pos:'MED', rating:77},
+      {name:'Marcos Conigliaro', pos:'DEL', rating:78},
+      {name:'Juan Verón', pos:'DEL', rating:83},
+      {name:'Néstor Togneri', pos:'DEL', rating:79},
+    ]
+  },
+  {
+    name:'Nacional 1971', tag:'Club · Copa Libertadores 1971', type:'club', country:'🔵⚪🔴',
+    players:[
+      {name:'Ladislao Mazurkiewicz', pos:'POR', rating:87},
+      {name:'Víctor Espárrago', pos:'LAT', rating:78},
+      {name:'Roberto Matosas', pos:'DEF', rating:80},
+      {name:'Luis Garisto', pos:'DEF', rating:78},
+      {name:'Jorge Manicera', pos:'LAT', rating:77},
+      {name:'Atilio Ancheta', pos:'MED', rating:80},
+      {name:'Luis Artime', pos:'DEL', rating:84},
+      {name:'Julio Morales', pos:'MED', rating:82},
+      {name:'Héctor Rodríguez', pos:'MED', rating:78},
+      {name:'Pablo Forlán', pos:'DEL', rating:79},
+      {name:'Danubio Díaz', pos:'DEL', rating:77},
+    ]
+  },
+  {
+    name:'Atlético de Madrid 2014', tag:'Club · Temporada 2013-14', type:'club', country:'🔴⚪',
+    players:[
+      {name:'Thibaut Courtois', pos:'POR', rating:88},
+      {name:'Juanfran', pos:'LAT', rating:81},
+      {name:'Diego Godín', pos:'DEF', rating:90},
+      {name:'Miranda', pos:'DEF', rating:82},
+      {name:'Filipe Luís', pos:'LAT', rating:84},
+      {name:'Gabi', pos:'MED', rating:82},
+      {name:'Tiago', pos:'MED', rating:81},
+      {name:'Koke', pos:'MED', rating:84},
+      {name:'Arda Turan', pos:'DEL', rating:83},
+      {name:'Diego Costa', pos:'DEL', rating:87},
+      {name:'David Villa', pos:'DEL', rating:87},
+    ]
+  },
+  {
+    name:'Porto 2004', tag:'Club · Champions League 2003-04', type:'club', country:'🔵⚪',
+    players:[
+      {name:'Vítor Baía', pos:'POR', rating:84},
+      {name:'Paulo Ferreira', pos:'LAT', rating:80},
+      {name:'Ricardo Carvalho', pos:'DEF', rating:86},
+      {name:'Jorge Costa', pos:'DEF', rating:81},
+      {name:'Nuno Valente', pos:'LAT', rating:78},
+      {name:'Costinha', pos:'MED', rating:78},
+      {name:'Maniche', pos:'MED', rating:83},
+      {name:'Pedro Mendes', pos:'MED', rating:79},
+      {name:'Deco', pos:'DEL', rating:88},
+      {name:'Dmitri Alenichev', pos:'MED', rating:80},
+      {name:'Carlos Alberto', pos:'DEL', rating:79},
+    ]
+  },
+  {
+    name:'Feyenoord 1970', tag:'Club · Copa de Europa 1969-70', type:'club', country:'🔴⚪',
+    players:[
+      {name:'Eddy Treijtel', pos:'POR', rating:81},
+      {name:'Rinus Israel', pos:'LAT', rating:79},
+      {name:'Theo Laseroms', pos:'DEF', rating:78},
+      {name:'Henk Vos', pos:'DEF', rating:77},
+      {name:'Cees Veenenbos', pos:'LAT', rating:76},
+      {name:'Wim Jansen', pos:'MED', rating:82},
+      {name:'Cor van der Hart', pos:'MED', rating:78},
+      {name:'Franz Hasil', pos:'MED', rating:79},
+      {name:'Ove Kindvall', pos:'DEL', rating:84},
+      {name:'Willem van Hanegem', pos:'DEL', rating:87},
+      {name:'Coen Moulijn', pos:'DEL', rating:83},
+    ]
+  },
+  {
+    name:'Benfica 1962', tag:'Club · Copa de Europa 1961-62', type:'club', country:'🔴',
+    players:[
+      {name:'Costa Pereira', pos:'POR', rating:83},
+      {name:'João Cavém', pos:'LAT', rating:78},
+      {name:'Germano', pos:'DEF', rating:82},
+      {name:'Angelo', pos:'DEF', rating:79},
+      {name:'Mário Coluna', pos:'MED', rating:87},
+      {name:'Cruz', pos:'LAT', rating:76},
+      {name:'José Aguas', pos:'DEL', rating:83},
+      {name:'Simões', pos:'MED', rating:80},
+      {name:'Coluna', pos:'MED', rating:84},
+      {name:'Eusébio', pos:'DEL', rating:94},
+      {name:'Augusto', pos:'DEL', rating:81},
+    ]
+  },
+  {
+    name:'Olimpia 1979', tag:'Club · Copa Libertadores 1979', type:'club', country:'⚫⚪',
+    players:[
+      {name:'Carlos Gamarra', pos:'POR', rating:79},
+      {name:'Eulalio Martínez', pos:'LAT', rating:76},
+      {name:'Víctor Garay', pos:'DEF', rating:79},
+      {name:'Vidal Acuña', pos:'DEF', rating:77},
+      {name:'Jorge Ruiz Díaz', pos:'LAT', rating:76},
+      {name:'Salvador Torrales', pos:'MED', rating:78},
+      {name:'Romerito', pos:'MED', rating:86},
+      {name:'Ramón Díaz', pos:'DEL', rating:85},
+      {name:'Pedro Flores', pos:'MED', rating:77},
+      {name:'Waldemar Victorino', pos:'DEL', rating:80},
+      {name:'Miguel Ángel Báez', pos:'DEL', rating:77},
+    ]
+  },
+  {
+    name:'Liverpool 1984', tag:'Club · Copa de Europa 1983-84', type:'club', country:'🔴',
+    players:[
+      {name:'Bruce Grobbelaar', pos:'POR', rating:83},
+      {name:'Phil Neal', pos:'LAT', rating:82},
+      {name:'Alan Hansen', pos:'DEF', rating:87},
+      {name:'Mark Lawrenson', pos:'DEF', rating:85},
+      {name:'Alan Kennedy', pos:'LAT', rating:80},
+      {name:'Sammy Lee', pos:'MED', rating:78},
+      {name:'Graeme Souness', pos:'MED', rating:88},
+      {name:'Craig Johnston', pos:'MED', rating:79},
+      {name:'Kenny Dalglish', pos:'DEL', rating:91},
+      {name:'Ian Rush', pos:'DEL', rating:89},
+      {name:'Michael Robinson', pos:'DEL', rating:78},
+    ]
+  },
+  {
+    name:'Valencia 2000', tag:'Club · Temporada 1999-2000', type:'club', country:'🟡⚫',
+    players:[
+      {name:'Santiago Cañizares', pos:'POR', rating:85},
+      {name:'Jocelyn Angloma', pos:'LAT', rating:80},
+      {name:'Roberto Ayala', pos:'DEF', rating:85},
+      {name:'Amedeo Carboni', pos:'DEF', rating:80},
+      {name:'Mauricio Pellegrino', pos:'LAT', rating:79},
+      {name:'Gerard López', pos:'MED', rating:78},
+      {name:'Gaizka Mendieta', pos:'MED', rating:87},
+      {name:'Rubén Baraja', pos:'MED', rating:82},
+      {name:'Claudio López', pos:'DEL', rating:83},
+      {name:'Miroslav Đukić', pos:'DEF', rating:78},
+      {name:'John Carew', pos:'DEL', rating:81},
+    ]
+  },
+];
+
+const RIVALS = TEAMS;
+
+const TOURNAMENTS = {
+  mundial: {
+    label: 'Mundial',
+    eyebrow: 'Selecciones de cualquier época',
+    pool: TEAMS.filter(t => t.type === 'seleccion'),
+    myLabel: '⚽ TU SELECCIÓN',
+  },
+  champions: {
+    label: 'Champions',
+    eyebrow: 'Clubes de cualquier época',
+    pool: TEAMS.filter(t => t.type === 'club'),
+    myLabel: '⚽ TU EQUIPO',
+  },
+};
+
+/* ======================= STATE ======================= */
+let state = {
+  tournament: null,        // 'mundial' | 'champions'
+  formation: null,
+  showRating: true,        // toggle de visibilidad de rating
+  slots: [],
+  currentRolledTeam: null,
+  rerollsLeft: 3,
+  usedPlayerKeys: new Set(),
+
+  // torneo
+  rivalTeams: [],          // 31 rivales sorteados para este torneo
+  groups: [],              // [{name, teams:[teamRef,...], table:Map, fixtures:[...]}]
+  groupFixtures: [],       // todos los partidos de grupo, en orden a jugarse
+  knockout: [],            // [{round:'Cuartos'|'Semifinal'|'Final', ties:[{a,b,done,winner,score}]}]
+  matchQueue: [],          // cola de partidos pendientes {type:'group'|'knockout', ...}
+  pendingMatch: null,      // partido que se está jugando ahora
+};
+
+// Representa a "mi" equipo dentro del torneo como un pseudo-team
+function myTeamRef() {
+  return { isMe: true, name: 'Once de Leyenda', country: '⚽', tag: 'Tu plantel' };
+}
+
+/* ======================= HELPERS DE DRAFT ======================= */
+
+// Devuelve un objeto con cuántos slots vacíos quedan por posición
+function emptySlotsByPos() {
+  const counts = { POR: 0, LAT: 0, DEF: 0, MED: 0, DEL: 0 };
+  state.slots.forEach(s => {
+    if (!s.player) counts[s.pos]++;
+  });
+  return counts;
+}
+
+// Devuelve el primer slot vacío que coincida con la posición dada
+function firstEmptySlotForPos(pos) {
+  return state.slots.find(s => !s.player && s.pos === pos);
+}
+
+// Verifica si el equipo ya está completo
+function squadComplete() {
+  return state.slots.every(s => s.player);
+}
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/* ======================= SETUP UI ======================= */
+const tournamentOptionsEl = document.getElementById('tournament-options');
+const tournamentInfoEl = document.getElementById('tournament-info');
+const formationOptionsEl = document.getElementById('formation-options');
+const formationPreviewEl = document.getElementById('formation-preview');
+const ratingVisOptionsEl = document.getElementById('rating-vis-options');
+const startDraftBtn = document.getElementById('start-draft-btn');
+
+Object.keys(TOURNAMENTS).forEach(key => {
+  const t = TOURNAMENTS[key];
+  const btn = document.createElement('button');
+  btn.className = 'opt-btn';
+  btn.textContent = t.label;
+  btn.onclick = () => {
+    document.querySelectorAll('#tournament-options .opt-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    state.tournament = key;
+    tournamentInfoEl.textContent = `${t.eyebrow} · ${t.pool.length} rivales posibles, se sortean 31 para tu llave de 32 equipos.`;
+    checkStartReady();
+  };
+  tournamentOptionsEl.appendChild(btn);
+});
+
+Object.keys(FORMATIONS).forEach(key => {
+  const btn = document.createElement('button');
+  btn.className = 'opt-btn';
+  btn.textContent = FORMATIONS[key].label;
+  btn.onclick = () => {
+    document.querySelectorAll('#formation-options .opt-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    state.formation = key;
+    renderFormationPreview(key);
+    checkStartReady();
+  };
+  formationOptionsEl.appendChild(btn);
+});
+
+function renderFormationPreview(key) {
+  formationPreviewEl.innerHTML = '';
+  FORMATIONS[key].slots.forEach(s => {
+    const dot = document.createElement('div');
+    dot.className = 'fdot';
+    dot.style.left = s.x + '%';
+    dot.style.top = (100 - s.y) + '%';
+    formationPreviewEl.appendChild(dot);
+  });
+}
+
+// Toggle de visibilidad de rating
+const ratingOptions = [
+  { key: true,  label: 'Ver rating' },
+  { key: false, label: 'No ver rating' },
+];
+ratingOptions.forEach(opt => {
+  const btn = document.createElement('button');
+  btn.className = 'opt-btn' + (opt.key ? ' selected' : '');
+  btn.textContent = opt.label;
+  btn.onclick = () => {
+    document.querySelectorAll('#rating-vis-options .opt-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    state.showRating = opt.key;
+    document.getElementById('rating-vis-info').textContent = opt.key
+      ? 'Vas a ver el rating de cada jugador mientras armás tu plantel.'
+      : 'Vas a elegir a ciegas: solo nombre, posición y procedencia. El rating sigue existiendo y afecta el partido, pero no lo vas a ver.';
+  };
+  ratingVisOptionsEl.appendChild(btn);
+});
+
+function checkStartReady() {
+  startDraftBtn.disabled = !(state.formation && state.tournament);
+}
+startDraftBtn.disabled = true;
+
+startDraftBtn.onclick = () => {
+  setupTournament();
+  state.slots = FORMATIONS[state.formation].slots.map(s => ({ ...s, player: null }));
+  state.usedPlayerKeys = new Set();
+  state.rerollsLeft = 3;
+  document.getElementById('setup-stage').style.display = 'none';
+  document.getElementById('draft-stage').classList.add('active');
+  renderScoreboard();
+  renderPitchMini();
+  resetRollUI();
+};
+
+/* ======================= TORNEO: ARMADO ======================= */
+function setupTournament() {
+  const pool = TOURNAMENTS[state.tournament].pool;
+  state.rivalTeams = shuffle(pool).slice(0, 31);
+
+  // 32 equipos: yo + 31 rivales -> 8 grupos de 4
+  const all32 = shuffle([myTeamRef(), ...state.rivalTeams]);
+  const groupNames = ['A','B','C','D','E','F','G','H'];
+  state.groups = groupNames.map((name, i) => ({
+    name: 'Grupo ' + name,
+    teams: all32.slice(i * 4, i * 4 + 4),
+  }));
+
+  state.groupFixtures = [];
+  state.groups.forEach(g => {
+    g.fixtures = roundRobinFixtures(g.teams);
+    g.fixtures.forEach(f => state.groupFixtures.push(Object.assign(f, { group: g })));
+  });
+  state.groupFixtures = shuffleKeepMyMatchesSpread(state.groupFixtures);
+
+  state.knockout = [];
+  state.matchQueue = state.groupFixtures.map(f => ({ type: 'group', fixture: f }));
+}
+
+// Genera todos los partidos posibles entre los 4 equipos de un grupo (todos contra todos)
+function roundRobinFixtures(teams) {
+  const fixtures = [];
+  for (let i = 0; i < teams.length; i++) {
+    for (let j = i + 1; j < teams.length; j++) {
+      fixtures.push({ home: teams[i], away: teams[j], played: false, scoreHome: null, scoreAway: null });
+    }
+  }
+  return fixtures;
+}
+
+// Reordena la cola de partidos para que el partido del jugador no quede siempre primero
+function shuffleKeepMyMatchesSpread(fixtures) {
+  return shuffle(fixtures);
+}
+
+/* ======================= SCOREBOARD ======================= */
+function renderScoreboard() {
+  const el = document.getElementById('scoreboard');
+  el.innerHTML = '';
+  state.slots.forEach((s) => {
+    const chip = document.createElement('div');
+    const filled = !!s.player;
+    chip.className = 'slot-chip' + (filled ? ' filled' : '');
+    chip.textContent = s.pos;
+    chip.title = filled ? s.player.name : s.id;
+    el.appendChild(chip);
+  });
+}
+
+/* ======================= PITCH MINI ======================= */
+function renderPitchMini() {
+  const el = document.getElementById('pitch-mini');
+  el.innerHTML = '';
+  state.slots.forEach((s) => {
+    const slotDiv = document.createElement('div');
+    slotDiv.className = 'pitch-slot' + (s.player ? ' filled' : '');
+    slotDiv.style.left = s.x + '%';
+    slotDiv.style.top = (100 - s.y) + '%';
+    const dot = document.createElement('div');
+    dot.className = 'dot';
+    dot.textContent = s.pos;
+    const nameDiv = document.createElement('div');
+    nameDiv.className = 'pslot-name';
+    nameDiv.textContent = s.player ? s.player.name.split(' ').slice(-1)[0] : '';
+    slotDiv.appendChild(dot);
+    slotDiv.appendChild(nameDiv);
+    el.appendChild(slotDiv);
+  });
+}
+
+/* ======================= DRAFT FLOW ======================= */
+function resetRollUI() {
+  document.getElementById('roll-cta').style.display = 'block';
+  document.getElementById('reveal-zone').style.display = 'none';
+}
+
+document.getElementById('roll-btn').onclick = () => {
+  if (squadComplete()) return;
+  doRoll(false);
+};
+
+document.getElementById('reroll-btn').onclick = () => {
+  if (state.rerollsLeft <= 0) return;
+  state.rerollsLeft--;
+  doRoll(true);
+};
+
+function doRoll(isReroll) {
+  const spinner = document.getElementById('ball-spinner');
+  spinner.classList.remove('spinning');
+  void spinner.offsetWidth;
+  spinner.classList.add('spinning');
+
+  const rollBtn = document.getElementById('roll-btn');
+  rollBtn.disabled = true;
+
+  setTimeout(() => {
+    const pool = TOURNAMENTS[state.tournament].pool;
+    const team = pool[Math.floor(Math.random() * pool.length)];
+    state.currentRolledTeam = team;
+    revealTeam(team);
+    rollBtn.disabled = false;
+  }, 900);
+}
+
+function revealTeam(team) {
+  document.getElementById('roll-cta').style.display = 'none';
+  document.getElementById('reveal-zone').style.display = 'block';
+  document.getElementById('reveal-team-name').textContent = team.country + ' ' + team.name;
+  document.getElementById('reveal-team-meta').textContent = team.tag;
+
+  document.getElementById('reroll-count').textContent = state.rerollsLeft;
+  document.getElementById('reroll-btn').style.opacity = state.rerollsLeft > 0 ? '1' : '0.4';
+  document.getElementById('reroll-btn').style.pointerEvents = state.rerollsLeft > 0 ? 'auto' : 'none';
+
+  // Posiciones con slots vacíos
+  const emptyCounts = emptySlotsByPos();
+  const availablePos = Object.entries(emptyCounts).filter(([, c]) => c > 0).map(([p]) => p);
+
+  // Mostrar posiciones disponibles
+  const posInfoEl = document.getElementById('pos-available-info');
+  posInfoEl.innerHTML = 'Posiciones disponibles: ' +
+    availablePos.map(p => `<span class="pos-tag">${p} (${POS[p]}) ×${emptyCounts[p]}</span>`).join('');
+
+  const grid = document.getElementById('player-grid');
+  grid.innerHTML = '';
+
+  team.players.forEach(p => {
+    const key = team.name + '|' + p.name;
+    const alreadyUsed = state.usedPlayerKeys.has(key);
+    // Deshabilitar si ya fue elegido O si no hay slot vacío para su posición
+    const noSlot = emptyCounts[p.pos] === 0;
+    const disabled = alreadyUsed || noSlot;
+    const hasSlot = !disabled;
+
+    const card = document.createElement('div');
+    card.className = 'player-card'
+      + (disabled ? ' disabled' : '')
+      + (hasSlot ? ' has-slot' : '')
+      + (state.showRating ? '' : ' rating-hidden');
+    card.innerHTML = `
+      <div class="prating">${p.rating}</div>
+      <div class="pname">${p.name}</div>
+      <div class="ppos">${p.pos} — ${POS[p.pos]}</div>
+      <div class="porigin">${team.country} ${team.name}</div>
+    `;
+    if (!disabled) {
+      card.onclick = () => pickPlayer(p, team, key);
+    }
+    grid.appendChild(card);
+  });
+}
+
+function pickPlayer(player, team, key) {
+  // Buscar el primer slot vacío que coincida con la posición del jugador
+  const targetSlot = firstEmptySlotForPos(player.pos);
+  if (!targetSlot) return;
+
+  targetSlot.player = {
+    name: player.name,
+    rating: player.rating,
+    nativePos: player.pos,
+    slotPos: targetSlot.pos,
+    origin: team.country + ' ' + team.name,
+  };
+  state.usedPlayerKeys.add(key);
+
+  // En modo multi, guardar estado del draft actual
+  if (typeof mpMode !== 'undefined' && mpMode) {
+    mp.drafts[mp.currentIdx].slots = state.slots;
+    mp.drafts[mp.currentIdx].rerollsLeft = state.rerollsLeft;
+  }
+
+  renderScoreboard();
+  renderPitchMini();
+
+  if (squadComplete()) {
+    if (typeof mpMode !== 'undefined' && mpMode) {
+      document.getElementById('draft-stage').classList.remove('active');
+      mp.currentIdx++;
+      if (mp.currentIdx < mp.playerCount) {
+        setTimeout(() => showHandoff(mp.currentIdx), 300);
+      } else {
+        setTimeout(() => startMpTournament(), 300);
+      }
+      return;
+    }
+    setTimeout(enterTournamentHub, 400);
+    return;
+  }
+  resetRollUI();
+}
+
+/* ======================= SIMULACIÓN DE PARTIDOS ======================= */
+function teamStrength(slots) {
+  let total = 0;
+  slots.forEach(s => {
+    let r = s.player.rating;
+    if (s.player.nativePos !== s.player.slotPos) r -= 4;
+    total += r;
+  });
+  return total / slots.length;
+}
+
+function rivalStrength(team) {
+  return team.players.reduce((a, p) => a + p.rating, 0) / team.players.length;
+}
+
+function strengthOf(teamRef) {
+  return teamRef.isMe ? teamStrength(state.slots) : rivalStrength(teamRef);
+}
+
+function poissonGoals(lambda) {
+  lambda = Math.max(0.1, lambda);
+  let L = Math.exp(-lambda), k = 0, p = 1;
+  do { k++; p *= Math.random(); } while (p > L);
+  return Math.max(0, Math.min(8, k - 1));
+}
+
+// Simula un partido entre dos teamRefs (puede ser yo vs rival, o rival vs rival)
+function playMatch(teamA, teamB) {
+  const strA = strengthOf(teamA);
+  const strB = strengthOf(teamB);
+  const diff = (strA - strB) / 6;
+  const goalsA = poissonGoals(1.3 + Math.max(0, diff * 0.4));
+  const oppLambdaB = 1.15 - Math.max(-1, Math.min(1, diff * 0.3)) * 0.4;
+  const goalsB = poissonGoals(Math.max(0.1, oppLambdaB));
+  return { goalsA, goalsB, strA, strB };
+}
+
+function buildMatchLog(teamA, teamB, goalsA, goalsB) {
+  const events = [];
+  const usedMinutes = new Set();
+  function randMin() {
+    let m;
+    do { m = Math.floor(Math.random() * 90) + 1; } while (usedMinutes.has(m));
+    usedMinutes.add(m);
+    return m;
+  }
+  function scorersFor(teamRef) {
+    if (teamRef.isMe) {
+      const attackers = state.slots.filter(s => s.player.slotPos === 'DEL' || s.player.slotPos === 'MED');
+      const pool = attackers.length ? attackers : state.slots;
+      return pool.map(s => s.player.name);
+    }
+    return teamRef.players.filter(p => p.pos !== 'POR').map(p => p.name);
+  }
+  const namesA = scorersFor(teamA);
+  const namesB = scorersFor(teamB);
+  for (let i = 0; i < goalsA; i++) {
+    const scorer = namesA[Math.floor(Math.random() * namesA.length)];
+    events.push({ min: randMin(), text: `¡GOL! ${scorer} pone el gol para ${teamA.isMe ? 'tu Once de Leyenda' : teamA.name}.`, side: 'A' });
+  }
+  for (let i = 0; i < goalsB; i++) {
+    const scorer = namesB[Math.floor(Math.random() * namesB.length)];
+    events.push({ min: randMin(), text: `Gol de ${scorer} para ${teamB.isMe ? 'tu Once de Leyenda' : teamB.name}.`, side: 'B' });
+  }
+  events.sort((a, b) => a.min - b.min);
+  return events;
+}
+
+/* ======================= HUB DE TORNEO ======================= */
+function enterTournamentHub() {
+  document.getElementById('draft-stage').classList.remove('active');
+  document.getElementById('tournament-stage').classList.add('active');
+  renderTournamentHub();
+}
+
+function groupTableRows(group) {
+  // Calcula tabla: Pts, PJ, DG, GF a partir de los fixtures jugados
+  const stats = new Map();
+  group.teams.forEach(t => stats.set(t, { pj: 0, g: 0, e: 0, p: 0, gf: 0, gc: 0, pts: 0 }));
+  group.fixtures.forEach(f => {
+    if (!f.played) return;
+    const sh = stats.get(f.home), sa = stats.get(f.away);
+    sh.pj++; sa.pj++;
+    sh.gf += f.scoreHome; sh.gc += f.scoreAway;
+    sa.gf += f.scoreAway; sa.gc += f.scoreHome;
+    if (f.scoreHome > f.scoreAway) { sh.g++; sh.pts += 3; sa.p++; }
+    else if (f.scoreHome < f.scoreAway) { sa.g++; sa.pts += 3; sh.p++; }
+    else { sh.e++; sa.e++; sh.pts++; sa.pts++; }
+  });
+  const rows = group.teams.map(t => ({ team: t, ...stats.get(t) }));
+  rows.sort((a, b) => (b.pts - a.pts) || ((b.gf - b.gc) - (a.gf - a.gc)) || (b.gf - a.gf));
+  return rows;
+}
+
+function teamLabel(t) {
+  return t.isMe ? TOURNAMENTS[state.tournament].myLabel : `${t.country} ${t.name}`;
+}
+
+function renderTournamentHub() {
+  const groupsZone = document.getElementById('groups-zone');
+  const koZone = document.getElementById('knockout-zone');
+  const titleEl = document.getElementById('tournament-stage-title');
+  const playBtn = document.getElementById('play-next-match-btn');
+
+  const groupsDone = state.groupFixtures.every(f => f.played);
+
+  if (!groupsDone) {
+    titleEl.textContent = `${TOURNAMENTS[state.tournament].label.toUpperCase()} — FASE DE GRUPOS`;
+    koZone.innerHTML = '';
+    groupsZone.innerHTML = state.groups.map(g => renderGroupBlock(g, false)).join('');
+    playBtn.style.display = 'inline-block';
+    playBtn.textContent = 'JUGAR SIGUIENTE PARTIDO';
+    return;
+  }
+
+  // Grupos terminados: armar knockout si no existe
+  if (state.knockout.length === 0) buildKnockoutFromGroups();
+
+  groupsZone.innerHTML = state.groups.map(g => renderGroupBlock(g, true)).join('');
+  titleEl.textContent = `${TOURNAMENTS[state.tournament].label.toUpperCase()} — ELIMINATORIAS`;
+  koZone.innerHTML = state.knockout.map(round => renderKoRound(round)).join('');
+
+  const champion = getChampionIfDone();
+  if (champion) {
+    playBtn.style.display = 'none';
+    renderChampionBanner(champion);
+  } else {
+    playBtn.style.display = 'inline-block';
+    playBtn.textContent = 'JUGAR SIGUIENTE PARTIDO';
+  }
+}
+
+function renderGroupBlock(g, compact) {
+  const rows = groupTableRows(g);
+  const rowsHtml = rows.map((r, idx) => {
+    const qualified = idx < 2;
+    return `
+      <tr class="${r.team.isMe ? 'me' : ''} ${qualified ? 'qualified' : ''}">
+        <td class="team-name">${teamLabel(r.team)}</td>
+        <td>${r.pj}</td>
+        <td>${r.pts}</td>
+        <td>${r.gf - r.gc >= 0 ? '+' : ''}${r.gf - r.gc}</td>
+      </tr>`;
+  }).join('');
+
+  return `
+    <div class="group-block">
+      <h3>${g.name}${compact ? ' (clasificados en dorado)' : ''}</h3>
+      <table class="group-table">
+        <tr><th>Equipo</th><th>PJ</th><th>Pts</th><th>DG</th></tr>
+        ${rowsHtml}
+      </table>
+    </div>`;
+}
+
+function buildKnockoutFromGroups() {
+  // 8 grupos → 16 clasificados → 8 cruces de 16avos
+  // Cruce clásico: A1vsB2, B1vsA2, C1vsD2, D1vsC2, E1vsF2, F1vsE2, G1vsH2, H1vsG2
+  const tablas = state.groups.map(groupTableRows);
+  const tops = tablas.map(t => t[0].team);   // primeros
+  const secs = tablas.map(t => t[1].team);   // segundos
+  // tops[0]=A1, tops[1]=B1 ... secs[0]=A2 ...
+
+  const makeTie = (a, b) => ({ a, b, done: false, winner: null, scoreA: null, scoreB: null });
+  const makePending = () => ({ a: null, b: null, done: false, winner: null, scoreA: null, scoreB: null, pending: true });
+
+  state.knockout = [
+    {
+      round: '16avos de Final',
+      ties: [
+        makeTie(tops[0], secs[1]), // A1 vs B2
+        makeTie(tops[1], secs[0]), // B1 vs A2
+        makeTie(tops[2], secs[3]), // C1 vs D2
+        makeTie(tops[3], secs[2]), // D1 vs C2
+        makeTie(tops[4], secs[5]), // E1 vs F2
+        makeTie(tops[5], secs[4]), // F1 vs E2
+        makeTie(tops[6], secs[7]), // G1 vs H2
+        makeTie(tops[7], secs[6]), // H1 vs G2
+      ]
+    },
+    {
+      round: 'Octavos de Final',
+      ties: [ makePending(), makePending(), makePending(), makePending() ]
+    },
+    {
+      round: 'Cuartos de Final',
+      ties: [ makePending(), makePending() ]
+    },
+    {
+      round: 'Semifinal',
+      ties: [ makePending() ]
+    },
+    {
+      round: 'Final',
+      ties: [ makePending() ]
+    }
+  ];
+}
+
+function renderKoRound(round) {
+  const tiesHtml = round.ties.map(tie => {
+    if (tie.pending && !tie.a) {
+      return `<div class="ko-tie pending"><span class="ko-team">?</span><span class="ko-vs">vs</span><span class="ko-team">?</span></div>`;
+    }
+    const aWin = tie.done && tie.winner === tie.a;
+    const bWin = tie.done && tie.winner === tie.b;
+    const score = tie.done ? `${tie.scoreA} – ${tie.scoreB}` : 'vs';
+    return `
+      <div class="ko-tie ${tie.done ? '' : 'pending'}">
+        <span class="ko-team ${aWin ? 'winner' : ''}">${teamLabel(tie.a)}</span>
+        <span class="ko-vs">${score}</span>
+        <span class="ko-team ${bWin ? 'winner' : ''}">${teamLabel(tie.b)}</span>
+      </div>`;
+  }).join('');
+  return `<div class="ko-round"><h3>${round.round}</h3>${tiesHtml}</div>`;
+}
+
+function getChampionIfDone() {
+  const final = state.knockout.find(r => r.round === 'Final');
+  if (final && final.ties[0].done) return final.ties[0].winner;
+  return null;
+}
+
+function renderChampionBanner(champion) {
+  const groupsZone = document.getElementById('groups-zone');
+  const banner = document.createElement('div');
+  banner.className = 'champion-banner';
+  const isMe = champion.isMe;
+  banner.innerHTML = `
+    <div class="cb-eyebrow">${isMe ? '¡SOS EL CAMPEÓN!' : 'CAMPEÓN DEL TORNEO'}</div>
+    <h2>${teamLabel(champion)}</h2>
+  `;
+  groupsZone.prepend(banner);
+  const playBtn = document.getElementById('play-next-match-btn');
+  playBtn.style.display = 'none';
+  showHubRestartButton();
+}
+
+function showHubRestartButton() {
+  const koZone = document.getElementById('knockout-zone');
+  const existing = document.getElementById('hub-restart-btn');
+  if (existing) return;
+  const row = document.createElement('div');
+  row.className = 'cta-row';
+  row.style.marginTop = '10px';
+  row.innerHTML = `<button class="btn-main" id="hub-restart-btn">🔄 VOLVER A EMPEZAR</button>`;
+  koZone.appendChild(row);
+  document.getElementById('hub-restart-btn').onclick = restartGame;
+}
+
+/* ======================= JUGAR SIGUIENTE PARTIDO ======================= */
+document.getElementById('play-next-match-btn').onclick = () => {
+  const next = pickNextMatch();
+  if (!next) return;
+  state.pendingMatch = next;
+  runMatch(next);
+};
+
+// Decide cuál es el próximo partido a jugar: prioriza el del jugador si está disponible,
+// si no, simula automáticamente los de la IA y avanza hasta que te toque a vos o se cierre la fase.
+function pickNextMatch() {
+  if (!state.groupFixtures.every(f => f.played)) {
+    // Buscar primero un partido del jugador pendiente
+    const myFixture = state.groupFixtures.find(f => !f.played && (f.home.isMe || f.away.isMe));
+    if (myFixture) return { type: 'group', fixture: myFixture };
+    // Si no tengo partido pendiente en este momento, auto-simular el resto entre IAs
+    const aiFixture = state.groupFixtures.find(f => !f.played);
+    if (aiFixture) {
+      autoSimGroupFixture(aiFixture);
+      return pickNextMatch();
+    }
+    return null;
+  }
+
+  if (state.knockout.length === 0) buildKnockoutFromGroups();
+
+  // Buscar tie pendiente (no done, con ambos equipos definidos)
+  for (const round of state.knockout) {
+    for (const tie of round.ties) {
+      if (tie.done || !tie.a || !tie.b) continue;
+      if (tie.a.isMe || tie.b.isMe) return { type: 'knockout', round, tie };
+    }
+  }
+  // Si no me toca a mí, auto-simular los de IA y promover ganadores a la siguiente ronda
+  for (const round of state.knockout) {
+    for (const tie of round.ties) {
+      if (!tie.done && tie.a && tie.b) {
+        autoSimKnockoutTie(tie);
+        advanceKnockoutWinners();
+        return pickNextMatch();
+      }
+    }
+  }
+  return null;
+}
+
+function autoSimGroupFixture(fixture) {
+  const { goalsA, goalsB } = playMatch(fixture.home, fixture.away);
+  fixture.played = true;
+  fixture.scoreHome = goalsA;
+  fixture.scoreAway = goalsB;
+}
+
+function autoSimKnockoutTie(tie) {
+  let { goalsA, goalsB } = playMatch(tie.a, tie.b);
+  if (goalsA === goalsB) { // desempate simple para IA vs IA
+    goalsA += Math.random() < 0.5 ? 1 : 0;
+    if (goalsA === goalsB) goalsB += 1;
+  }
+  tie.done = true;
+  tie.scoreA = goalsA;
+  tie.scoreB = goalsB;
+  tie.winner = goalsA > goalsB ? tie.a : tie.b;
+}
+
+function advanceKnockoutWinners() {
+  const dieciseis = state.knockout.find(r => r.round === '16avos de Final');
+  const octavos   = state.knockout.find(r => r.round === 'Octavos de Final');
+  const cuartos   = state.knockout.find(r => r.round === 'Cuartos de Final');
+  const semis     = state.knockout.find(r => r.round === 'Semifinal');
+  const final     = state.knockout.find(r => r.round === 'Final');
+
+  // 16avos → Octavos (pares: ties[0+1]→oct[0], [2+3]→oct[1], [4+5]→oct[2], [6+7]→oct[3])
+  if (dieciseis && octavos) {
+    [[0,1,0],[2,3,1],[4,5,2],[6,7,3]].forEach(([i,j,k]) => {
+      if (dieciseis.ties[i].done && dieciseis.ties[j].done && !octavos.ties[k].a) {
+        octavos.ties[k].a = dieciseis.ties[i].winner;
+        octavos.ties[k].b = dieciseis.ties[j].winner;
+        octavos.ties[k].pending = false;
+      }
+    });
+  }
+
+  // Octavos → Cuartos ([0+1]→cuar[0], [2+3]→cuar[1])
+  if (octavos && cuartos) {
+    [[0,1,0],[2,3,1]].forEach(([i,j,k]) => {
+      if (octavos.ties[i].done && octavos.ties[j].done && !cuartos.ties[k].a) {
+        cuartos.ties[k].a = octavos.ties[i].winner;
+        cuartos.ties[k].b = octavos.ties[j].winner;
+        cuartos.ties[k].pending = false;
+      }
+    });
+  }
+
+  // Cuartos → Semifinal
+  if (cuartos && semis && cuartos.ties.every(t => t.done) && !semis.ties[0].a) {
+    semis.ties[0].a = cuartos.ties[0].winner;
+    semis.ties[0].b = cuartos.ties[1].winner;
+    semis.ties[0].pending = false;
+  }
+
+  // Semifinal → Final
+  if (semis && final && semis.ties[0].done && !final.ties[0].a) {
+    const winner = semis.ties[0].winner;
+    const loser  = winner === semis.ties[0].a ? semis.ties[0].b : semis.ties[0].a;
+    final.ties[0].a = winner;
+    final.ties[0].b = loser;
+    final.ties[0].pending = false;
+  }
+}
+
+function runMatch(next) {
+  document.getElementById('tournament-stage').classList.remove('active');
+  document.getElementById('result-stage').classList.add('active');
+
+  const teamA = next.type === 'group' ? next.fixture.home : next.tie.a;
+  const teamB = next.type === 'group' ? next.fixture.away : next.tie.b;
+
+  let { goalsA, goalsB, strA, strB } = playMatch(teamA, teamB);
+
+  const isKoTie = next.type === 'knockout';
+  let wentToPenalties = false, penA = null, penB = null;
+  if (isKoTie && goalsA === goalsB) {
+    wentToPenalties = true;
+    penA = 3 + Math.floor(Math.random() * 4);
+    penB = 3 + Math.floor(Math.random() * 4);
+    if (penA === penB) penA += 1;
+  }
+
+  const log = buildMatchLog(teamA, teamB, goalsA, goalsB);
+  renderScorecard({ teamA, teamB, goalsA, goalsB, strA, strB, log, wentToPenalties, penA, penB, next });
+}
+
+function renderScorecard({ teamA, teamB, goalsA, goalsB, strA, strB, log, wentToPenalties, penA, penB, next }) {
+  const myIsA = teamA.isMe, myIsB = teamB.isMe;
+  let resultClass = 'draw', resultLabel = 'EMPATE';
+
+  let winnerSide = null;
+  if (goalsA !== goalsB) winnerSide = goalsA > goalsB ? 'A' : 'B';
+  else if (wentToPenalties) winnerSide = penA > penB ? 'A' : 'B';
+
+  if (winnerSide) {
+    const iWon = (winnerSide === 'A' && myIsA) || (winnerSide === 'B' && myIsB);
+    const involvesMe = myIsA || myIsB;
+    if (involvesMe) {
+      resultClass = iWon ? 'win' : 'lose';
+      resultLabel = iWon ? 'VICTORIA' : 'DERROTA';
+    } else {
+      resultClass = 'draw';
+      resultLabel = `GANA ${teamLabel(winnerSide === 'A' ? teamA : teamB).toUpperCase()}`;
+    }
+  }
+
+  const card = document.getElementById('scorecard');
+  let logHtml = log.map(e => `
+    <div class="log-line ${(e.side === 'A' && myIsA) || (e.side === 'B' && myIsB) ? 'goal' : ''}">
+      <span class="log-min">${e.min}'</span>
+      <span>${e.text}</span>
+    </div>
+  `).join('');
+  if (!logHtml) logHtml = `<div class="log-line">Partido sin goles en los 90 minutos.</div>`;
+
+  let penHtml = '';
+  if (wentToPenalties) {
+    penHtml = `<div class="result-tag draw" style="margin-top:8px;">PENALES: ${penA} – ${penB}</div>`;
+  }
+
+  let squadHtml = '';
+  if (myIsA || myIsB) {
+    squadHtml = `
+      <div class="final-squad">
+        <h4>TU ONCE TITULAR (${FORMATIONS[state.formation].label})</h4>
+        ${state.slots.map(s => `
+          <div class="squad-row">
+            <div class="sq-pos">${s.pos}</div>
+            <div class="sq-name">${s.player.name} ${state.showRating ? `<span style="color:var(--tiza-op); font-size:11px;">(${s.player.rating})</span>` : ''}</div>
+            <div class="sq-origin">${s.player.origin}</div>
+          </div>
+        `).join('')}
+      </div>`;
+  }
+
+  const stageLabel = next.type === 'group' ? `${next.fixture.group.name} · Fase de grupos` : next.round.round;
+
+  card.innerHTML = `
+    <div class="badge-tag" style="margin-bottom:14px; display:inline-block;">${stageLabel}</div>
+    <div class="vs-row">
+      <div class="vs-team">
+        <div class="vt-name">${teamLabel(teamA)}</div>
+        <div class="vt-tag">Fuerza media: ${strA.toFixed(1)}</div>
+      </div>
+      <div class="vs-score">${goalsA} – ${goalsB}</div>
+      <div class="vs-team">
+        <div class="vt-name">${teamLabel(teamB)}</div>
+        <div class="vt-tag">Fuerza media: ${strB.toFixed(1)}</div>
+      </div>
+    </div>
+    <div class="result-tag ${resultClass}">${resultLabel}</div>
+    ${penHtml}
+    <div class="match-log">${logHtml}</div>
+    ${squadHtml}
+  `;
+
+  // Guardar resultado en el modelo de datos
+  if (next.type === 'group') {
+    next.fixture.played = true;
+    next.fixture.scoreHome = goalsA;
+    next.fixture.scoreAway = goalsB;
+  } else {
+    next.tie.done = true;
+    next.tie.scoreA = goalsA;
+    next.tie.scoreB = goalsB;
+    next.tie.winner = winnerSide === 'A' ? teamA : teamB;
+    advanceKnockoutWinners();
+  }
+
+  // ¿Perdí este partido? En knockout, perder significa quedar eliminado del torneo.
+  // En fase de grupos, perder no te elimina matemáticamente, pero igual se ofrece reiniciar.
+  const involvesMe = myIsA || myIsB;
+  const iLost = involvesMe && winnerSide &&
+    !((winnerSide === 'A' && myIsA) || (winnerSide === 'B' && myIsB));
+  const iLostKnockout = next.type === 'knockout' && iLost;
+
+  const continueBtn = document.getElementById('continue-tournament-btn');
+  const restartBtn = document.getElementById('restart-btn');
+  const prominentBox = document.getElementById('restart-prominent-box');
+  const rpTitle = document.getElementById('rp-title');
+  const rpMsg = document.getElementById('rp-msg');
+
+  // Ocultar bloque prominente por defecto
+  prominentBox.classList.remove('visible');
+
+  // Determinar el nombre de la fase actual
+  const phaseNames = {
+    'group': 'Fase de Grupos',
+    '16avos de Final': '16avos de Final',
+    'Octavos de Final': 'Octavos de Final',
+    'Cuartos de Final': 'Cuartos de Final',
+    'Semifinal': 'Semifinal',
+    'Final': 'la Final',
+  };
+  const currentPhase = next.type === 'group'
+    ? 'Fase de Grupos'
+    : (phaseNames[next.round.round] || next.round.round);
+
+  if (iLostKnockout) {
+    // Eliminado del torneo en fase eliminatoria
+    continueBtn.style.display = 'none';
+    restartBtn.style.display = 'none';
+    rpTitle.textContent = `❌ ELIMINADO EN ${currentPhase.toUpperCase()}`;
+    rpMsg.textContent = `Tu equipo quedó fuera del torneo en ${currentPhase}. Armá un nuevo once para volver a intentarlo.`;
+    prominentBox.classList.add('visible');
+  } else if (iLost) {
+    // Perdiste en fase de grupos: seguís en el torneo pero se ofrece reiniciar
+    continueBtn.style.display = 'inline-block';
+    restartBtn.style.display = 'none';
+    rpTitle.textContent = `😞 DERROTA EN ${currentPhase.toUpperCase()}`;
+    rpMsg.textContent = `Perdiste este partido pero todavía podés clasificar. ¿Seguís adelante o armás un equipo nuevo?`;
+    prominentBox.classList.add('visible');
+  } else {
+    continueBtn.style.display = 'inline-block';
+    restartBtn.style.display = 'inline-block';
+    restartBtn.className = 'btn-ghost';
+  }
+  restartBtn.textContent = '🔄 VOLVER A EMPEZAR';
+}
+
+document.getElementById('continue-tournament-btn').onclick = () => {
+  document.getElementById('result-stage').classList.remove('active');
+  document.getElementById('tournament-stage').classList.add('active');
+  renderTournamentHub();
+};
+
+function restartGame() {
+  document.getElementById('result-stage').classList.remove('active');
+  document.getElementById('tournament-stage').classList.remove('active');
+  document.getElementById('draft-stage').classList.remove('active');
+  document.getElementById('setup-stage').style.display = 'block';
+  document.getElementById('scoreboard').innerHTML = '';
+  document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll('#rating-vis-options .opt-btn')[0].classList.add('selected');
+  formationPreviewEl.innerHTML = '';
+  document.getElementById('rating-vis-info').textContent = 'Elegí si querés ver el rating de cada jugador mientras armás tu plantel, o elegir a ciegas solo por nombre, posición y procedencia.';
+  document.getElementById('continue-tournament-btn').style.display = 'inline-block';
+  // Restaurar botón ghost y ocultar bloque prominente
+  const restartBtn = document.getElementById('restart-btn');
+  restartBtn.style.display = 'inline-block';
+  restartBtn.className = 'btn-ghost';
+  restartBtn.textContent = '🔄 VOLVER A EMPEZAR';
+  document.getElementById('restart-prominent-box').classList.remove('visible');
+  const hubRestart = document.getElementById('hub-restart-btn');
+  if (hubRestart) hubRestart.parentElement.remove();
+  state = {
+    tournament: null, formation: null, showRating: true, slots: [], currentRolledTeam: null,
+    rerollsLeft: 3, usedPlayerKeys: new Set(),
+    rivalTeams: [], groups: [], groupFixtures: [], knockout: [], matchQueue: [], pendingMatch: null,
+  };
+  startDraftBtn.disabled = true;
+}
+
+document.getElementById('restart-btn').onclick = restartGame;
+document.getElementById('restart-prominent-btn').onclick = restartGame;
+
+/* ================================================================
+   MODO CON AMIGOS
+   ================================================================ */
+
+/* ---------- estado global multijugador ---------- */
+let mpMode = false;
+let mp = {
+  playerCount: 2,
+  names: ['Jugador 1', 'Jugador 2'],
+  tournament: null,
+  formation: null,
+  showRating: true,
+  // draft
+  currentIdx: 0,
+  drafts: [],          // [{name, slots, rerollsLeft}]
+  globalUsed: new Set(), // jugadores ya elegidos por cualquier jugador
+  // torneo
+  groups: [],
+  groupFixtures: [],
+  knockout: [],
+};
+
+/* ---------- tabs de modo ---------- */
+function switchMode(mode) {
+  document.getElementById('tab-solo').classList.toggle('active', mode === 'solo');
+  document.getElementById('tab-multi').classList.toggle('active', mode === 'multi');
+  document.getElementById('panel-solo').classList.toggle('active', mode === 'solo');
+  document.getElementById('panel-multi').classList.toggle('active', mode === 'multi');
+}
+
+/* ---------- setup multijugador ---------- */
+// Cantidad de jugadores
+const mpCountEl = document.getElementById('mp-count-options');
+[2, 3, 4].forEach(n => {
+  const btn = document.createElement('button');
+  btn.className = 'opt-btn' + (n === 2 ? ' selected' : '');
+  btn.textContent = n + ' jugadores';
+  btn.onclick = () => {
+    document.querySelectorAll('#mp-count-options .opt-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    mp.playerCount = n;
+    buildMpNameInputs(n);
+    document.getElementById('mp-config-extra').style.display = 'block';
+    checkMpReady();
+  };
+  mpCountEl.appendChild(btn);
+});
+
+function buildMpNameInputs(n) {
+  const grid = document.getElementById('mp-names-grid');
+  grid.innerHTML = '';
+  for (let i = 0; i < n; i++) {
+    const inp = document.createElement('input');
+    inp.className = 'mp-name-input';
+    inp.placeholder = 'Jugador ' + (i + 1);
+    inp.value = mp.names[i] || '';
+    inp.oninput = () => { mp.names[i] = inp.value.trim() || 'Jugador ' + (i + 1); checkMpReady(); };
+    grid.appendChild(inp);
+  }
+}
+
+// Torneo MP
+const mpTournOpts = document.getElementById('mp-tournament-options');
+Object.keys(TOURNAMENTS).forEach(key => {
+  const t = TOURNAMENTS[key];
+  const btn = document.createElement('button');
+  btn.className = 'opt-btn';
+  btn.textContent = t.label;
+  btn.onclick = () => {
+    document.querySelectorAll('#mp-tournament-options .opt-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    mp.tournament = key;
+    document.getElementById('mp-tournament-info').textContent = t.eyebrow + ' · ' + t.pool.length + ' equipos disponibles para el torneo.';
+    checkMpReady();
+  };
+  mpTournOpts.appendChild(btn);
+});
+
+// Formación MP
+const mpFmtOpts = document.getElementById('mp-formation-options');
+const mpFmtPreview = document.getElementById('mp-formation-preview');
+Object.keys(FORMATIONS).forEach(key => {
+  const btn = document.createElement('button');
+  btn.className = 'opt-btn';
+  btn.textContent = FORMATIONS[key].label;
+  btn.onclick = () => {
+    document.querySelectorAll('#mp-formation-options .opt-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    mp.formation = key;
+    mpFmtPreview.innerHTML = '';
+    FORMATIONS[key].slots.forEach(s => {
+      const dot = document.createElement('div');
+      dot.className = 'fdot';
+      dot.style.left = s.x + '%';
+      dot.style.top = (100 - s.y) + '%';
+      mpFmtPreview.appendChild(dot);
+    });
+    checkMpReady();
+  };
+  mpFmtOpts.appendChild(btn);
+});
+
+// Rating MP
+const mpRatingOpts = document.getElementById('mp-rating-options');
+[{ v: true, label: 'Ver rating' }, { v: false, label: 'No ver rating' }].forEach((opt, i) => {
+  const btn = document.createElement('button');
+  btn.className = 'opt-btn' + (i === 0 ? ' selected' : '');
+  btn.textContent = opt.label;
+  btn.onclick = () => {
+    document.querySelectorAll('#mp-rating-options .opt-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    mp.showRating = opt.v;
+    document.getElementById('mp-rating-info').textContent = opt.v
+      ? 'Los jugadores van a ver el rating mientras draftean.'
+      : 'Sin rating visible: eligen a ciegas por nombre y posición.';
+  };
+  mpRatingOpts.appendChild(btn);
+});
+
+function checkMpReady() {
+  const ok = mp.tournament && mp.formation;
+  document.getElementById('start-mp-btn').disabled = !ok;
+}
+
+document.getElementById('start-mp-btn').onclick = () => {
+  // Resolver nombres
+  const inputs = document.querySelectorAll('#mp-names-grid .mp-name-input');
+  mp.names = [];
+  inputs.forEach((inp, i) => mp.names.push(inp.value.trim() || 'Jugador ' + (i + 1)));
+  mp.names = mp.names.slice(0, mp.playerCount);
+  startMpGame();
+};
+
+/* ---------- arrancar el juego multijugador ---------- */
+function startMpGame() {
+  mpMode = true;
+  mp.currentIdx = 0;
+  mp.globalUsed = new Set();
+  mp.drafts = mp.names.map(name => ({
+    name,
+    slots: FORMATIONS[mp.formation].slots.map(s => ({ ...s, player: null })),
+    rerollsLeft: 3,
+  }));
+  mp.groups = [];
+  mp.groupFixtures = [];
+  mp.knockout = [];
+
+  document.getElementById('setup-stage').style.display = 'none';
+  showHandoff(0);
+}
+
+/* ---------- pantalla de entrega ---------- */
+function showHandoff(idx) {
+  const name = mp.names[idx];
+  const isFirst = idx === 0;
+  document.getElementById('hs-name').textContent = name;
+  document.getElementById('hs-sub').textContent = isFirst
+    ? 'Pasale el dispositivo. Cuando estés listo, tocá el botón para armar tu plantel.'
+    : '¡Tu turno! Pasale el dispositivo a ' + name + '. Tocá cuando estés listo.';
+  document.getElementById('handoff-screen').classList.add('active');
+  document.getElementById('hs-ready-btn').onclick = () => {
+    document.getElementById('handoff-screen').classList.remove('active');
+    enterMpDraft(idx);
+  };
+}
+
+/* ---------- draft de cada jugador ---------- */
+function enterMpDraft(idx) {
+  const draft = mp.drafts[idx];
+
+  // Sincronizar state global con este jugador
+  state.formation = mp.formation;
+  state.tournament = mp.tournament;
+  state.showRating = mp.showRating;
+  state.slots = draft.slots;
+  state.rerollsLeft = draft.rerollsLeft;
+  state.usedPlayerKeys = mp.globalUsed; // compartido entre todos
+
+  document.getElementById('draft-stage').classList.add('active');
+
+  // Agregar/actualizar banner de turno
+  let banner = document.getElementById('mp-turn-banner');
+  if (!banner) {
+    banner = document.createElement('div');
+    banner.className = 'turn-banner';
+    banner.id = 'mp-turn-banner';
+    const panel = document.querySelector('#draft-stage .panel');
+    panel.insertBefore(banner, panel.firstChild);
+  }
+  const filled = draft.slots.filter(s => s.player).length;
+  banner.innerHTML = `
+    <div class="tb-label">TURNO DE DRAFT · JUGADOR ${idx + 1} DE ${mp.playerCount}</div>
+    <div class="tb-name">${draft.name}</div>
+    <div class="tb-progress">${filled}/11 posiciones completadas</div>
+  `;
+
+  renderScoreboard();
+  renderPitchMini();
+  resetRollUI();
+}
+
+/* ================================================================
+   TORNEO CON AMIGOS: Grupos + Eliminatoria
+   ================================================================ */
+
+function startMpTournament() {
+  // Armar grupos: jugadores humanos + rellenos de IA
+  // Usamos grupos de 4 siempre. Con 2-4 humanos, completamos a 8 equipos (2 grupos de 4)
+  const pool = TOURNAMENTS[mp.tournament].pool;
+  const humanTeams = mp.drafts.map(d => ({ isHuman: true, name: d.name, draft: d, country: '⚽' }));
+
+  let totalSlots = 8; // 2 grupos de 4
+  if (mp.playerCount === 3 || mp.playerCount === 4) totalSlots = 8;
+
+  const fillCount = totalSlots - mp.playerCount;
+  const fillTeams = shuffle(pool).slice(0, fillCount).map(t => ({
+    isHuman: false, name: t.name, country: t.country, tag: t.tag, players: t.players
+  }));
+
+  const allTeams = shuffle([...humanTeams, ...fillTeams]);
+
+  // 2 grupos de 4
+  mp.groups = [
+    { name: 'Grupo A', teams: allTeams.slice(0, 4), fixtures: [] },
+    { name: 'Grupo B', teams: allTeams.slice(4, 8), fixtures: [] },
+  ];
+  mp.groups.forEach(g => {
+    g.fixtures = [];
+    for (let i = 0; i < g.teams.length; i++)
+      for (let j = i + 1; j < g.teams.length; j++)
+        g.fixtures.push({ home: g.teams[i], away: g.teams[j], played: false, goalsH: 0, goalsA: 0 });
+    g.fixtures = shuffle(g.fixtures);
+  });
+  mp.groupFixtures = [...mp.groups[0].fixtures, ...mp.groups[1].fixtures];
+  mp.knockout = [];
+
+  showMpHub();
+}
+
+/* ---------- fuerza de un equipo ---------- */
+function mpStrength(team) {
+  if (team.isHuman) {
+    const slots = team.draft.slots;
+    return slots.reduce((a, s) => {
+      let r = s.player.rating;
+      if (s.player.nativePos !== s.player.slotPos) r -= 4;
+      return a + r;
+    }, 0) / slots.length;
+  }
+  return team.players.reduce((a, p) => a + p.rating, 0) / team.players.length;
+}
+
+/* ---------- simular partido ---------- */
+function simMatch(teamH, teamA) {
+  const strH = mpStrength(teamH), strA = mpStrength(teamA);
+  const diff = (strH - strA) / 6;
+  const gH = poissonGoals(1.3 + Math.max(0, diff * 0.4));
+  const gA = poissonGoals(Math.max(0.1, 1.15 - Math.max(-1, Math.min(1, diff * 0.3)) * 0.4));
+  return { gH, gA, strH, strA };
+}
+
+function simMatchLog(teamH, teamA, gH, gA) {
+  const events = [];
+  const used = new Set();
+  function rMin() { let m; do { m = Math.floor(Math.random()*90)+1; } while(used.has(m)); used.add(m); return m; }
+  function scorers(team) {
+    if (team.isHuman) {
+      const s = team.draft.slots;
+      const atk = s.filter(x => x.player.slotPos==='DEL'||x.player.slotPos==='MED');
+      return (atk.length ? atk : s).map(x => x.player.name);
+    }
+    return team.players.filter(p => p.pos!=='POR').map(p => p.name);
+  }
+  const nH = scorers(teamH), nA = scorers(teamA);
+  for (let i=0;i<gH;i++) events.push({min:rMin(), text:`¡GOL! ${nH[Math.floor(Math.random()*nH.length)]} anota para ${teamH.name}.`, side:'H'});
+  for (let i=0;i<gA;i++) events.push({min:rMin(), text:`Gol de ${nA[Math.floor(Math.random()*nA.length)]} para ${teamA.name}.`, side:'A'});
+  events.sort((a,b)=>a.min-b.min);
+  return events;
+}
+
+/* ---------- tabla de grupo ---------- */
+function groupTable(g) {
+  const stats = new Map();
+  g.teams.forEach(t => stats.set(t, {pj:0,g:0,e:0,p:0,gf:0,gc:0,pts:0}));
+  g.fixtures.forEach(f => {
+    if (!f.played) return;
+    const sH = stats.get(f.home), sA = stats.get(f.away);
+    sH.pj++;sA.pj++;
+    sH.gf+=f.goalsH;sH.gc+=f.goalsA;
+    sA.gf+=f.goalsA;sA.gc+=f.goalsH;
+    if(f.goalsH>f.goalsA){sH.g++;sH.pts+=3;sA.p++;}
+    else if(f.goalsA>f.goalsH){sA.g++;sA.pts+=3;sH.p++;}
+    else{sH.e++;sA.e++;sH.pts++;sA.pts++;}
+  });
+  const rows = g.teams.map(t=>({team:t,...stats.get(t)}));
+  rows.sort((a,b)=>(b.pts-a.pts)||((b.gf-b.gc)-(a.gf-a.gc))||(b.gf-a.gf));
+  return rows;
+}
+
+/* ---------- mostrar hub ---------- */
+function showMpHub() {
+  document.getElementById('mp-hub-stage').classList.add('active');
+  renderMpHub();
+}
+
+function renderMpHub() {
+  const panel = document.getElementById('mp-hub-panel');
+  const allGroupsDone = mp.groupFixtures.every(f => f.played);
+
+  if (!allGroupsDone) {
+    renderMpGroupsPhase(panel);
+  } else {
+    if (mp.knockout.length === 0) buildMpKnockout();
+    renderMpKoPhase(panel);
+  }
+}
+
+/* ---------- fase de grupos ---------- */
+function renderMpGroupsPhase(panel) {
+  const groupsHtml = mp.groups.map(g => {
+    const rows = groupTable(g);
+    const rowsHtml = rows.map((r, i) => `
+      <tr class="${i<2?'qualified':''} ${r.team.isHuman?'me':''}">
+        <td class="team-name">${r.team.country||''} ${r.team.name}</td>
+        <td>${r.pj}</td><td>${r.pts}</td>
+        <td>${r.gf-r.gc>=0?'+':''}${r.gf-r.gc}</td><td>${r.gf}</td>
+      </tr>`).join('');
+    const fixtHtml = g.fixtures.map(f => `
+      <div class="mp-fixture-row ${f.played?'played':''}">
+        <span class="fx-name ${f.home.isHuman?'human':''}">${f.home.name}</span>
+        <span class="fx-score">${f.played?f.goalsH+' – '+f.goalsA:'vs'}</span>
+        <span class="fx-name ${f.away.isHuman?'human':''}">${f.away.name}</span>
+      </div>`).join('');
+    return `<div class="mp-group-block"><h3>${g.name}</h3>
+      <table class="group-table">
+        <tr><th>Equipo</th><th>PJ</th><th>Pts</th><th>DG</th><th>GF</th></tr>${rowsHtml}
+      </table><div style="margin-top:10px;">${fixtHtml}</div></div>`;
+  }).join('');
+
+  panel.innerHTML = `
+    <h2 style="font-family:'Anton',sans-serif;font-size:22px;letter-spacing:1px;color:var(--dorado-claro);margin-bottom:18px;">
+      CON AMIGOS — FASE DE GRUPOS
+    </h2>
+    ${groupsHtml}
+    <div class="cta-row"><button class="btn-main" id="mp-play-btn">JUGAR SIGUIENTE PARTIDO</button></div>
+    <div class="cta-row" style="margin-top:10px;"><button class="btn-ghost" id="mp-reset-btn">🔄 VOLVER A EMPEZAR</button></div>
+  `;
+  document.getElementById('mp-play-btn').onclick = mpPlayNext;
+  document.getElementById('mp-reset-btn').onclick = restartGame;
+}
+
+/* ---------- siguiente partido en grupos ---------- */
+function mpPlayNext() {
+  // Auto-simular fixtures de IA hasta encontrar uno con humano
+  while (true) {
+    const next = mp.groupFixtures.find(f => !f.played);
+    if (!next) { renderMpHub(); return; }
+    if (next.home.isHuman || next.away.isHuman) {
+      runMpFixture(next);
+      return;
+    }
+    // Auto-sim IA vs IA
+    const { gH, gA } = simMatch(next.home, next.away);
+    next.played = true; next.goalsH = gH; next.goalsA = gA;
+  }
+}
+
+function runMpFixture(fix) {
+  const { gH, gA, strH, strA } = simMatch(fix.home, fix.away);
+  fix.played = true; fix.goalsH = gH; fix.goalsA = gA;
+  const log = simMatchLog(fix.home, fix.away, gH, gA);
+  showMpScorecard(fix.home, fix.away, gH, gA, strH, strA, log, null, null, null, false);
+}
+
+/* ---------- construir bracket ---------- */
+function buildMpKnockout() {
+  const tabA = groupTable(mp.groups[0]);
+  const tabB = groupTable(mp.groups[1]);
+  const A1 = tabA[0].team, A2 = tabA[1].team;
+  const B1 = tabB[0].team, B2 = tabB[1].team;
+
+  // Semis: A1 vs B2, B1 vs A2
+  const makeTie = (a,b) => ({a,b,done:false,winner:null,scoreA:null,scoreB:null,penA:null,penB:null});
+  const makePending = () => ({a:null,b:null,done:false,winner:null,scoreA:null,scoreB:null,pending:true});
+
+  mp.knockout = [
+    { round: 'Semifinal', ties: [makeTie(A1,B2), makeTie(B1,A2)] },
+    { round: 'Final',     ties: [makePending()] },
+  ];
+}
+
+/* ---------- fase eliminatoria ---------- */
+function renderMpKoPhase(panel) {
+  const champion = mp.knockout[mp.knockout.length-1].ties[0];
+  const isOver = champion && champion.done;
+
+  const koHtml = mp.knockout.map(round => {
+    const tiesHtml = round.ties.map(tie => {
+      if (!tie.a) return `<div class="mp-ko-tie pending"><span class="kt-team">?</span><span class="kt-vs">vs</span><span class="kt-team">?</span></div>`;
+      const aWin = tie.done && tie.winner===tie.a;
+      const bWin = tie.done && tie.winner===tie.b;
+      const score = tie.done ? `${tie.scoreA} – ${tie.scoreB}${tie.penA!==null?' (pen. '+tie.penA+'-'+tie.penB+')':''}` : 'vs';
+      return `<div class="mp-ko-tie ${tie.done?'':'pending'}">
+        <span class="kt-team ${aWin?'winner':''} ${tie.a.isHuman?'human':''}">${tie.a.country||''} ${tie.a.name}</span>
+        <span class="kt-vs">${score}</span>
+        <span class="kt-team ${bWin?'winner':''} ${tie.b&&tie.b.isHuman?'human':''}">${tie.b?tie.b.name:'?'}</span>
+      </div>`;
+    }).join('');
+    return `<div class="ko-round"><h3 style="font-family:'Anton',sans-serif;font-size:15px;letter-spacing:1.5px;color:var(--dorado-claro);text-align:center;text-transform:uppercase;margin-bottom:10px;">${round.round}</h3>${tiesHtml}</div>`;
+  }).join('');
+
+  const groupsHtml = mp.groups.map(g => {
+    const rows = groupTable(g);
+    const rowsHtml = rows.map((r,i)=>`<tr class="${i<2?'qualified':''} ${r.team.isHuman?'me':''}">
+      <td class="team-name">${r.team.country||''} ${r.team.name}</td>
+      <td>${r.pj}</td><td>${r.pts}</td><td>${r.gf-r.gc>=0?'+':''}${r.gf-r.gc}</td>
+    </tr>`).join('');
+    return `<div class="mp-group-block"><h3>${g.name}</h3>
+      <table class="group-table"><tr><th>Equipo</th><th>PJ</th><th>Pts</th><th>DG</th></tr>${rowsHtml}</table></div>`;
+  }).join('');
+
+  panel.innerHTML = `
+    <h2 style="font-family:'Anton',sans-serif;font-size:22px;letter-spacing:1px;color:var(--dorado-claro);margin-bottom:18px;">
+      CON AMIGOS — ELIMINATORIAS
+    </h2>
+    ${isOver ? `<div class="mp-champion-box">
+      <div class="champ-eyebrow">${champion.winner.isHuman?'🏆 ¡CAMPEÓN!':'CAMPEÓN'}</div>
+      <h2>${champion.winner.name}</h2>
+    </div>` : ''}
+    ${koHtml}
+    ${groupsHtml}
+    ${!isOver ? `<div class="cta-row" style="margin-top:18px;"><button class="btn-main" id="mp-play-btn">JUGAR SIGUIENTE PARTIDO</button></div>` : ''}
+    <div class="cta-row" style="margin-top:10px;"><button class="btn-ghost" id="mp-reset-btn">🔄 VOLVER A EMPEZAR</button></div>
+  `;
+  if (!isOver) document.getElementById('mp-play-btn').onclick = mpPlayNextKo;
+  document.getElementById('mp-reset-btn').onclick = restartGame;
+}
+
+/* ---------- siguiente partido en eliminatoria ---------- */
+function mpPlayNextKo() {
+  for (const round of mp.knockout) {
+    for (const tie of round.ties) {
+      if (tie.done || !tie.a || !tie.b) continue;
+      if (tie.a.isHuman || tie.b.isHuman) {
+        runMpKoTie(tie);
+        return;
+      }
+      // Auto-sim IA vs IA
+      autoSimMpKoTie(tie);
+      advanceMpKo();
+      renderMpHub();
+      return;
+    }
+  }
+}
+
+function autoSimMpKoTie(tie) {
+  const { gH, gA } = simMatch(tie.a, tie.b);
+  let sA = gH, sB = gA, penA = null, penB = null;
+  if (sA === sB) {
+    penA = 3 + Math.floor(Math.random()*4);
+    penB = 3 + Math.floor(Math.random()*4);
+    if (penA === penB) penA++;
+  }
+  tie.done=true; tie.scoreA=sA; tie.scoreB=sB; tie.penA=penA; tie.penB=penB;
+  tie.winner = sA>sB ? tie.a : sB>sA ? tie.b : (penA>penB ? tie.a : tie.b);
+}
+
+function advanceMpKo() {
+  const semis = mp.knockout.find(r=>r.round==='Semifinal');
+  const final  = mp.knockout.find(r=>r.round==='Final');
+  if (semis && final) {
+    const winners = semis.ties.filter(t=>t.done).map(t=>t.winner);
+    if (winners.length===2 && !final.ties[0].a) {
+      final.ties[0].a = winners[0];
+      final.ties[0].b = winners[1];
+      final.ties[0].pending = false;
+    }
+  }
+}
+
+function runMpKoTie(tie) {
+  const { gH, gA, strH, strA } = simMatch(tie.a, tie.b);
+  let penA = null, penB = null;
+  if (gH === gA) {
+    penA = 3 + Math.floor(Math.random()*4);
+    penB = 3 + Math.floor(Math.random()*4);
+    if (penA === penB) penA++;
+  }
+  const log = simMatchLog(tie.a, tie.b, gH, gA);
+  showMpScorecard(tie.a, tie.b, gH, gA, strH, strA, log, penA, penB, tie, true);
+}
+
+/* ---------- scorecard multijugador ---------- */
+function showMpScorecard(teamH, teamA, gH, gA, strH, strA, log, penH, penA, tieRef, isKo) {
+  // Guardar resultado si es KO
+  if (isKo && tieRef) {
+    tieRef.done=true; tieRef.scoreA=gH; tieRef.scoreB=gA; tieRef.penA=penH; tieRef.penB=penA;
+    const penWinH = penH!==null && penH>penA;
+    tieRef.winner = gH>gA ? teamH : gA>gH ? teamA : (penWinH ? teamH : teamA);
+    advanceMpKo();
+  }
+
+  document.getElementById('mp-hub-stage').classList.remove('active');
+  document.getElementById('result-stage').classList.add('active');
+
+  // Determinar resultado para etiqueta
+  let resultClass = 'draw', resultLabel = 'EMPATE';
+  const winner = gH>gA ? teamH : gA>gH ? teamA : (penH!==null ? (penH>penA?teamH:teamA) : null);
+  if (winner) { resultClass='win'; resultLabel='GANA ' + winner.name.toUpperCase(); }
+
+  const logHtml = log.length
+    ? log.map(e=>`<div class="log-line ${e.side==='H'?'goal':''}"><span class="log-min">${e.min}'</span><span>${e.text}</span></div>`).join('')
+    : `<div class="log-line">Partido sin goles.</div>`;
+
+  const penHtml = penH!==null
+    ? `<div class="result-tag draw" style="margin-top:8px;">PENALES: ${penH} – ${penA}</div>` : '';
+
+  // Mostrar planteles de jugadores humanos
+  function squadBlock(team) {
+    if (!team.isHuman) return '';
+    const s = team.draft.slots;
+    return `<div class="final-squad"><h4>PLANTEL DE ${team.name.toUpperCase()} (${FORMATIONS[mp.formation].label})</h4>
+      ${s.map(sl=>`<div class="squad-row">
+        <div class="sq-pos">${sl.pos}</div>
+        <div class="sq-name">${sl.player.name}${mp.showRating?` <span style="color:var(--tiza-op);font-size:11px;">(${sl.player.rating})</span>`:''}</div>
+        <div class="sq-origin">${sl.player.origin}</div>
+      </div>`).join('')}
+    </div>`;
+  }
+
+  document.getElementById('scorecard').innerHTML = `
+    <div class="vs-row">
+      <div class="vs-team"><div class="vt-name">${teamH.name}</div><div class="vt-tag">Fuerza: ${strH.toFixed(1)}</div></div>
+      <div class="vs-score">${gH} – ${gA}</div>
+      <div class="vs-team"><div class="vt-name">${teamA.name}</div><div class="vt-tag">Fuerza: ${strA.toFixed(1)}</div></div>
+    </div>
+    <div class="result-tag ${resultClass}">${resultLabel}</div>
+    ${penHtml}
+    <div class="match-log">${logHtml}</div>
+    ${squadBlock(teamH)}${squadBlock(teamA)}
+  `;
+
+  document.getElementById('restart-prominent-box').classList.remove('visible');
+  const contBtn = document.getElementById('continue-tournament-btn');
+  const restBtn = document.getElementById('restart-btn');
+  contBtn.style.display = 'inline-block';
+  contBtn.textContent = 'CONTINUAR TORNEO';
+  restBtn.style.display = 'inline-block';
+  restBtn.className = 'btn-ghost';
+
+  // Sobreescribir onclick del botón continuar para volver al hub MP
+  contBtn.onclick = () => {
+    document.getElementById('result-stage').classList.remove('active');
+    document.getElementById('mp-hub-stage').classList.add('active');
+    renderMpHub();
+    // Restaurar onclick original para modo solo
+    contBtn.onclick = () => {
+      document.getElementById('result-stage').classList.remove('active');
+      document.getElementById('tournament-stage').classList.add('active');
+      renderTournamentHub();
+    };
+  };
+}
+
+/* ---------- restartGame: limpiar estado MP también ---------- */
+const _origRestartGame = restartGame;
+function restartGame() {
+  mpMode = false;
+  mp.currentIdx = 0;
+  mp.drafts = [];
+  mp.globalUsed = new Set();
+  mp.groups = [];
+  mp.groupFixtures = [];
+  mp.knockout = [];
+
+  // Limpiar banner de turno
+  const banner = document.getElementById('mp-turn-banner');
+  if (banner) banner.remove();
+
+  // Ocultar hub MP
+  document.getElementById('mp-hub-stage').classList.remove('active');
+
+  // Resetear tabs al modo solo
+  switchMode('solo');
+
+  // Llamar al restart original
+  _origRestartGame();
+}
+</script>
+</body>
+</html>
